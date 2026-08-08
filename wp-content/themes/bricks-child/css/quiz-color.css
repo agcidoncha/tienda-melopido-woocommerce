@@ -1,0 +1,175 @@
+/**
+ * Quiz "¿No sabes qué color elegir?" — estilos del contenido generado por
+ * JS dentro del popup nativo "Quiz de Color" (id 641). La tarjeta, la
+ * barra de progreso y el propio popup ya son 100% nativos de Bricks;
+ * esto solo cubre lo que el JS inserta dinámicamente (ver quiz-color.js).
+ */
+
+.quiz-color-step {
+	font-family: Montserrat, sans-serif;
+	font-size: 13px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: #7a736d;
+	margin: 0 0 8px;
+}
+
+.quiz-color-question {
+	font-family: PlayfairDisplay, serif;
+	font-size: 24px;
+	color: #1f1f1f;
+	margin: 0 0 20px;
+}
+
+.quiz-color-answers {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.quiz-color-answer {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	padding: 12px 16px;
+	border: 1px solid #D8D2CB;
+	border-radius: 8px;
+	background: #FFFFFF;
+	font-family: Montserrat, sans-serif;
+	font-size: 15px;
+	color: #1f1f1f;
+	cursor: pointer;
+	text-align: left;
+	transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.quiz-color-answer:hover {
+	border-color: #C17D7A;
+	background: #FDFCFA;
+}
+
+.quiz-color-swatch {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	box-shadow: 0 0 0 1px rgba(31, 31, 31, 0.1);
+}
+
+.quiz-color-back {
+	margin-top: 20px;
+	background: none;
+	border: none;
+	padding: 0;
+	font-family: Montserrat, sans-serif;
+	font-size: 13px;
+	color: #7a736d;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.quiz-color-back:hover {
+	color: #C17D7A;
+}
+
+.quiz-color-result-top {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 16px;
+}
+
+.quiz-color-swatch-hero {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	box-shadow: 0 0 0 1px rgba(31, 31, 31, 0.1);
+}
+
+.quiz-color-kicker {
+	font-family: Montserrat, sans-serif;
+	font-size: 13px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: #7a736d;
+	margin: 0 0 4px;
+}
+
+.quiz-color-result-name {
+	font-family: PlayfairDisplay, serif;
+	font-size: 28px;
+	color: #1f1f1f;
+	margin: 0;
+}
+
+.quiz-color-copy {
+	font-family: Montserrat, sans-serif;
+	font-size: 15px;
+	color: #66605C;
+	line-height: 1.5;
+	margin: 0 0 20px;
+}
+
+.quiz-color-alt {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 16px;
+	background: #F4EFE8;
+	border-radius: 8px;
+	font-family: Montserrat, sans-serif;
+	font-size: 14px;
+	color: #66605C;
+	margin-bottom: 24px;
+}
+
+.quiz-color-alt-swatch {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	box-shadow: 0 0 0 1px rgba(31, 31, 31, 0.1);
+}
+
+.quiz-color-cta-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.quiz-color-cta-primary {
+	background: #C17D7A;
+	color: #FFFFFF;
+	border: none;
+	border-radius: 8px;
+	padding: 14px 20px;
+	font-family: Montserrat, sans-serif;
+	font-weight: 600;
+	font-size: 14px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	cursor: pointer;
+}
+
+.quiz-color-cta-primary:hover {
+	background: #AC6764;
+}
+
+.quiz-color-restart {
+	background: none;
+	border: none;
+	padding: 0;
+	font-family: Montserrat, sans-serif;
+	font-size: 14px;
+	color: #7a736d;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.quiz-color-restart:hover {
+	color: #C17D7A;
+}

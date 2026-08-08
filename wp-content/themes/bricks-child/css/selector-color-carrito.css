@@ -1,0 +1,117 @@
+/**
+ * Selector de color de variaciones (plugin WPVS) en página de producto.
+ * Bricks no puede estilar este markup vía controles nativos (no es su
+ * propio renderer de swatches), así que se aplica aquí en el tema hijo.
+ */
+
+.vi-wpvs-option-wrap {
+	margin-right: 8px;
+}
+
+.vi-wpvs-option-color {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	box-shadow: 0 1px 3px rgba(31, 31, 31, 0.15);
+	transition: box-shadow 0.2s ease;
+}
+
+.vi-wpvs-option-wrap-selected .vi-wpvs-option-color {
+	box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #c17d7a;
+}
+
+/* El plugin monta "Color:" y los swatches como columnas de tabla lado a
+   lado (con th en display:inline-flex vía JS). Lo forzamos a apilarse en
+   columna para que "Color:" quede como título encima de los círculos,
+   igual que en el diseño de referencia. */
+.variations tbody tr.vi-wpvs-variation-style {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
+}
+
+.variations th.label,
+.variations td.value {
+	display: block !important;
+	width: 100% !important;
+	padding-bottom: 0 !important;
+}
+
+.variations th.label label {
+	display: inline !important;
+}
+
+/* El nombre del color y "Limpiar" se reubican por JS (ver
+   selector-color-carrito.js) fuera del <th> estrecho, en una fila propia
+   dentro de la celda de los swatches, alineados en la misma línea. */
+.selector-color-nombre-row {
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	column-gap: 12px;
+	width: 100%;
+	margin-top: 4px !important;
+}
+
+.vi-wpvs-label-selected-title {
+	font-family: PlayfairDisplay, serif;
+	font-size: 22px;
+	line-height: 1.25;
+	font-weight: 700;
+	color: #1f1f1f;
+}
+
+.reset_variations {
+	color: #7a736d;
+	font-family: Montserrat, sans-serif;
+	text-decoration: underline;
+}
+
+.reset_variations:hover {
+	color: #c17d7a;
+}
+
+/* El "×" antes de "Limpiar" es un ::before con display:block por defecto,
+   así que se descoloca en su propia línea en vez de ir junto al texto. */
+.reset_variations::before {
+	display: inline;
+	margin-right: 4px;
+}
+
+/* WooCommerce reserva espacio (margin) para la caja de precio/descripción
+   de la variación aunque esté vacía, separando de más la fila del nombre
+   del color del selector de cantidad. La vaciamos por completo. */
+.woocommerce-variation-description,
+.woocommerce-variation-price,
+.woocommerce-variation-availability {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+/* En vez de fiarnos de márgenes individuales (que colisionan de forma
+   impredecible con paddings/alturas por defecto de WooCommerce y varían
+   según el producto), controlamos el espaciado tabla → cantidad → botón
+   con flex + gap directamente en el formulario. gap no colapsa ni
+   depende de cajas vacías, así que es un valor exacto y predecible. */
+form.cart.variations_form {
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 0 !important;
+}
+
+.single_variation_wrap {
+	margin-top: 0 !important;
+}
+
+/* El tema/WooCommerce trae esta regla: ".woocommerce-variation:not(:empty)
+   { margin-bottom: 30px }". Como esa caja siempre contiene 3 divs vacíos
+   (descripción/precio/disponibilidad), nunca es realmente ":empty" y el
+   margen se aplica siempre en cuanto se despliega una variación. */
+form.cart .woocommerce-variation:not(:empty) {
+	margin-bottom: 0 !important;
+}
+
+table.variations {
+	height: auto !important;
+}
+

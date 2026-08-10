@@ -44,6 +44,22 @@ add_action( 'wp_enqueue_scripts', function() {
 			filemtime( get_stylesheet_directory() . '/js/galeria-video-toggle.js' ),
 			true
 		);
+
+		wp_enqueue_script(
+			'precio-cantidad-dinamico',
+			get_stylesheet_directory_uri() . '/js/precio-cantidad-dinamico.js',
+			[ 'jquery' ],
+			filemtime( get_stylesheet_directory() . '/js/precio-cantidad-dinamico.js' ),
+			true
+		);
+
+		wp_enqueue_script(
+			'seleccion-obligatoria-color',
+			get_stylesheet_directory_uri() . '/js/seleccion-obligatoria-color.js',
+			[ 'jquery' ],
+			filemtime( get_stylesheet_directory() . '/js/seleccion-obligatoria-color.js' ),
+			true
+		);
 	}
 } );
 

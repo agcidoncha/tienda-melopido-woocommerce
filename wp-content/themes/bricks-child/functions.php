@@ -36,6 +36,14 @@ add_action( 'wp_enqueue_scripts', function() {
 			filemtime( get_stylesheet_directory() . '/js/quiz-color.js' ),
 			true
 		);
+
+		wp_enqueue_script(
+			'galeria-video-toggle',
+			get_stylesheet_directory_uri() . '/js/galeria-video-toggle.js',
+			[],
+			filemtime( get_stylesheet_directory() . '/js/galeria-video-toggle.js' ),
+			true
+		);
 	}
 } );
 

@@ -64,6 +64,43 @@ add_action( 'wp_enqueue_scripts', function() {
 } );
 
 /**
+ * Dynamic tag {measure}: título del producto sin el prefijo "Funda de
+ * Seda ", para mostrar solo la medida (ej. "150×45 cm") en la ficha sin
+ * depender de un campo aparte que haya que mantener por producto.
+ */
+add_filter( 'bricks/dynamic_tags_list', function( $tags ) {
+	$tags[] = [
+		'name'  => '{measure}',
+		'label' => 'Medida (sin prefijo "Funda de Seda")',
+		'group' => 'Custom',
+	];
+
+	return $tags;
+} );
+
+function melopido_get_measure_from_title( $post_id ) {
+	$title = get_the_title( $post_id );
+
+	return trim( str_ireplace( 'Funda de Seda', '', $title ) );
+}
+
+add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 'text' ) {
+	if ( $tag === 'measure' || $tag === '{measure}' ) {
+		return melopido_get_measure_from_title( $post->ID );
+	}
+
+	return $tag;
+}, 10, 3 );
+
+add_filter( 'bricks/dynamic_data/render_content', function( $content, $post, $context = 'text' ) {
+	if ( strpos( $content, '{measure}' ) !== false ) {
+		$content = str_replace( '{measure}', melopido_get_measure_from_title( $post->ID ), $content );
+	}
+
+	return $content;
+}, 10, 3 );
+
+/**
  * Register custom elements
  */
 add_action( 'init', function() {

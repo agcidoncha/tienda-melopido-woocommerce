@@ -41,6 +41,14 @@
 	display: inline !important;
 }
 
+/* Separador ":" que el plugin inyecta junto a la etiqueta al seleccionar
+   un color (pensado para ir pegado al nombre del color, ej. "Color:
+   Marfil"). Como el nombre se reubica aparte (ver JS), este ":" queda
+   suelto junto al recuento de opciones y sobra. */
+.vi-wpvs-label-selected-separator {
+	display: none !important;
+}
+
 /* El nombre del color y "Limpiar" se reubican por JS (ver
    selector-color-carrito.js) fuera del <th> estrecho, en una fila propia
    dentro de la celda de los swatches, alineados en la misma línea. */
@@ -71,11 +79,9 @@
 	color: #c17d7a;
 }
 
-/* El "×" antes de "Limpiar" es un ::before con display:block por defecto,
-   así que se descoloca en su propia línea en vez de ir junto al texto. */
+/* Se quita la "×" antes de "Limpiar" (queda solo el texto del enlace). */
 .reset_variations::before {
-	display: inline;
-	margin-right: 4px;
+	content: none;
 }
 
 /* WooCommerce reserva espacio (margin) para la caja de precio/descripción
@@ -113,5 +119,40 @@ form.cart .woocommerce-variation:not(:empty) {
 
 table.variations {
 	height: auto !important;
+}
+
+/* Bloque "Total" inyectado junto al selector de cantidad por
+   precio-cantidad-dinamico.js (ver ese archivo). Ambos se envuelven en
+   ".cantidad-total-row" para quedar uno junto al otro sin afectar al
+   botón "Añadir al carrito", que sigue debajo en su propia fila. */
+.cantidad-total-row {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 16px;
+}
+
+.precio-total-dinamico {
+	display: flex;
+	flex-direction: column;
+	row-gap: 2px;
+}
+
+.precio-total-label {
+	font-family: Montserrat, sans-serif;
+	font-size: 12px;
+	line-height: 1;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: #7a736d;
+}
+
+.precio-total-valor {
+	font-family: PlayfairDisplay, serif;
+	font-size: 22px;
+	line-height: 1;
+	font-weight: 700;
+	color: #1f1f1f;
 }
 

@@ -15,7 +15,7 @@
  */
 document.addEventListener( 'DOMContentLoaded', function () {
 	var overlay = document.getElementById( 'quiz-overlay' );
-	var trigger = document.getElementById( 'brxe-trg001' );
+	var trigger = document.querySelector( '.quiz-color-trigger' );
 	var cerrar = document.getElementById( 'quiz-cerrar' );
 	var preguntas = document.getElementById( 'quiz-vista-preguntas' );
 	var resultado = document.getElementById( 'quiz-vista-resultado' );

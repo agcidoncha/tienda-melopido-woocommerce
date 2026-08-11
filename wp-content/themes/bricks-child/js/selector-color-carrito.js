@@ -45,8 +45,34 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		}
 	}
 
-	relocate();
+	// La etiqueta "Color" la pone el plugin de swatches sin dos puntos ni
+	// recuento de opciones. Añadimos "(N disponibles)" leyendo el número
+	// real de swatches en vez de fijarlo a mano, para que no se desajuste
+	// si algún día un producto tiene menos de 7 colores.
+	function updateColorLabel() {
+		var label = form.querySelector( '.variations th.label label' );
+		if ( ! label ) {
+			return;
+		}
 
-	var observer = new MutationObserver( relocate );
+		var count = form.querySelectorAll( '.vi-wpvs-option-wrap' ).length;
+		if ( ! count ) {
+			return;
+		}
+
+		var desired = 'Color (' + count + ' disponibles)';
+		if ( label.textContent !== desired ) {
+			label.textContent = desired;
+		}
+	}
+
+	function handleMutation() {
+		relocate();
+		updateColorLabel();
+	}
+
+	handleMutation();
+
+	var observer = new MutationObserver( handleMutation );
 	observer.observe( form, { childList: true, subtree: true } );
 } );

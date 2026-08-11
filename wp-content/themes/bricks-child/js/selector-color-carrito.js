@@ -60,7 +60,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
 			return;
 		}
 
-		var desired = 'Color (' + count + ' disponibles)';
+		var desired = 'Disponible en ' + count + ' colores';
 		if ( label.textContent !== desired ) {
 			label.textContent = desired;
 		}

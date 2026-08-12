@@ -156,3 +156,57 @@ table.variations {
 	color: #1f1f1f;
 }
 
+/* Barra fija inferior (móvil): respeta el borde inferior con gesto/notch
+   de iOS, y evita que el contenido final de la ficha quede tapado por la
+   barra fija en pantallas pequeñas. */
+.barra-fija-movil {
+	padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+}
+
+/* Sin color elegido: solo se ve el botón, a todo lo ancho. Al elegir color
+   (.barra-con-color en el bloque raíz) aparecen cantidad y total, y el
+   botón se encoge para compartir la fila con ellos. */
+.barra-fija-movil .barra-necesita-color {
+	display: none;
+}
+
+.barra-fija-movil.barra-con-color .barra-necesita-color {
+	display: flex !important;
+}
+
+.barra-fija-movil.barra-con-color .barra-anadir-carrito {
+	flex-grow: 1 !important;
+}
+
+/* "Limpiar" se muestra en línea junto al nombre, no como flex (que es lo
+   que aplica la regla genérica de arriba a todo lo que necesita color). */
+.barra-fija-movil.barra-con-color .barra-limpiar {
+	display: inline !important;
+}
+
+/* Botón "Añadir al carrito" inactivo hasta elegir un color. */
+.barra-fija-movil .barra-anadir-carrito {
+	opacity: 0.45;
+	pointer-events: none;
+}
+
+.barra-fija-movil.barra-con-color .barra-anadir-carrito {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/* Flecha del desplegable de color: gira al abrir. */
+.barra-icono-desplegar {
+	transition: transform 0.2s ease;
+}
+
+.barra-pildora-color.barra-desplegada .barra-icono-desplegar {
+	transform: rotate(180deg);
+}
+
+@media (max-width: 767px) {
+	body.single-product {
+		padding-bottom: 90px;
+	}
+}
+

@@ -1,5 +1,18 @@
 <?php
 /**
+ * El enlace para deshacer la variación seleccionada usa el texto "Limpiar"
+ * (cadena traducida del núcleo de WooCommerce). Lo sustituimos por "Quitar",
+ * que describe mejor la acción, sin tocar plantillas ni el DOM.
+ */
+add_filter( 'gettext', function ( $translated, $original, $domain ) {
+	if ( 'woocommerce' === $domain && 'Clear' === $original ) {
+		return 'Quitar';
+	}
+
+	return $translated;
+}, 10, 3 );
+
+/**
  * Register/enqueue custom scripts and styles
  */
 add_action( 'wp_enqueue_scripts', function() {
@@ -58,6 +71,22 @@ add_action( 'wp_enqueue_scripts', function() {
 			get_stylesheet_directory_uri() . '/js/seleccion-obligatoria-color.js',
 			[ 'jquery' ],
 			filemtime( get_stylesheet_directory() . '/js/seleccion-obligatoria-color.js' ),
+			true
+		);
+
+		wp_enqueue_script(
+			'barra-sticky-movil',
+			get_stylesheet_directory_uri() . '/js/barra-sticky-movil.js',
+			[],
+			filemtime( get_stylesheet_directory() . '/js/barra-sticky-movil.js' ),
+			true
+		);
+
+		wp_enqueue_script(
+			'confirmacion-carrito',
+			get_stylesheet_directory_uri() . '/js/confirmacion-carrito.js',
+			[ 'jquery', 'wc-add-to-cart' ],
+			filemtime( get_stylesheet_directory() . '/js/confirmacion-carrito.js' ),
 			true
 		);
 	}

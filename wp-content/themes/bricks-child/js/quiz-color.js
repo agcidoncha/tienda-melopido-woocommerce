@@ -15,13 +15,15 @@
  */
 document.addEventListener( 'DOMContentLoaded', function () {
 	var overlay = document.getElementById( 'quiz-overlay' );
-	var trigger = document.querySelector( '.quiz-color-trigger' );
+	// Puede haber más de un disparador (el de la ficha en escritorio y el de
+	// la barra fija en móvil), así que se enganchan todos, no solo el primero.
+	var triggers = document.querySelectorAll( '.quiz-color-trigger' );
 	var cerrar = document.getElementById( 'quiz-cerrar' );
 	var preguntas = document.getElementById( 'quiz-vista-preguntas' );
 	var resultado = document.getElementById( 'quiz-vista-resultado' );
 	var progreso = document.getElementById( 'quiz-progreso-relleno' );
 
-	if ( ! overlay || ! trigger || ! preguntas || ! resultado || ! progreso ) {
+	if ( ! overlay || ! triggers.length || ! preguntas || ! resultado || ! progreso ) {
 		return;
 	}
 
@@ -37,7 +39,9 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		overlay.style.display = 'none';
 	}
 
-	trigger.addEventListener( 'click', abrirQuiz );
+	triggers.forEach( function ( trigger ) {
+		trigger.addEventListener( 'click', abrirQuiz );
+	} );
 	if ( cerrar ) {
 		cerrar.addEventListener( 'click', cerrarQuiz );
 	}

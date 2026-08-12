@@ -103,6 +103,13 @@ document.addEventListener( 'DOMContentLoaded', function () {
 			qty.dispatchEvent( new Event( 'change', { bubbles: true } ) );
 		}
 
+		// El desplegable de colores de la barra móvil pudo quedarse abierto
+		// (flecha girada) si se añadió al carrito sin cerrarlo antes.
+		var pildora = document.querySelector( '.barra-pildora-color' );
+		if ( pildora ) {
+			pildora.classList.remove( 'barra-desplegada' );
+		}
+
 		document.querySelectorAll( '.carrito-estado-normal' ).forEach( function ( el ) {
 			el.style.display = '';
 		} );

@@ -27,6 +27,13 @@ add_action( 'wp_enqueue_scripts', function() {
 			filemtime( get_stylesheet_directory() . '/css/selector-color-carrito.css' )
 		);
 
+		wp_enqueue_style(
+			'medida-selector',
+			get_stylesheet_directory_uri() . '/css/medida-selector.css',
+			[ 'bricks-child' ],
+			filemtime( get_stylesheet_directory() . '/css/medida-selector.css' )
+		);
+
 		wp_enqueue_script(
 			'selector-color-carrito',
 			get_stylesheet_directory_uri() . '/js/selector-color-carrito.js',
@@ -103,6 +110,11 @@ add_filter( 'bricks/dynamic_tags_list', function( $tags ) {
 		'label' => 'Medida (sin prefijo "Funda de Seda")',
 		'group' => 'Custom',
 	];
+	$tags[] = [
+		'name'  => '{measure_link}',
+		'label' => 'Enlace de medida (la medida actual sale sin enlace)',
+		'group' => 'Custom',
+	];
 
 	return $tags;
 } );
@@ -113,9 +125,28 @@ function melopido_get_measure_from_title( $post_id ) {
 	return trim( str_ireplace( 'Funda de Seda', '', $title ) );
 }
 
+/**
+ * Fila "Otras medidas": en vez de excluir la medida actual del listado
+ * (dejando 5 botones, 3+2), se incluyen las 6 y la actual se renderiza
+ * como texto sin enlace, para que la fila de 6 forme siempre 2x3.
+ */
+function melopido_render_measure_link( $post_id ) {
+	$measure = melopido_get_measure_from_title( $post_id );
+
+	if ( (int) $post_id === (int) get_queried_object_id() ) {
+		return '<span class="medida-actual-deshabilitada">' . esc_html( $measure ) . '</span>';
+	}
+
+	return '<a href="' . esc_url( get_permalink( $post_id ) ) . '">' . esc_html( $measure ) . '</a>';
+}
+
 add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 'text' ) {
 	if ( $tag === 'measure' || $tag === '{measure}' ) {
 		return melopido_get_measure_from_title( $post->ID );
+	}
+
+	if ( $tag === 'measure_link' || $tag === '{measure_link}' ) {
+		return melopido_render_measure_link( $post->ID );
 	}
 
 	return $tag;
@@ -124,6 +155,10 @@ add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 
 add_filter( 'bricks/dynamic_data/render_content', function( $content, $post, $context = 'text' ) {
 	if ( strpos( $content, '{measure}' ) !== false ) {
 		$content = str_replace( '{measure}', melopido_get_measure_from_title( $post->ID ), $content );
+	}
+
+	if ( strpos( $content, '{measure_link}' ) !== false ) {
+		$content = str_replace( '{measure_link}', melopido_render_measure_link( $post->ID ), $content );
 	}
 
 	return $content;

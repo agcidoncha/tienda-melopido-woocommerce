@@ -1,0 +1,13 @@
+/* Item de la fila "Otras medidas" que corresponde a la medida actual:
+   se muestra igual que los demás para completar la rejilla de 2x3,
+   pero sin enlace (ver {measure_link} en functions.php) y con estilo
+   apagado para que quede claro que no es clicable. */
+.item-otra-medida:has(.medida-actual-deshabilitada) {
+	background: #F4EFE8 !important;
+	border-color: #DDD8D2 !important;
+	cursor: default !important;
+}
+
+.medida-actual-deshabilitada {
+	color: #9C9690;
+}

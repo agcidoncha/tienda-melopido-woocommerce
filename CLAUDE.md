@@ -37,3 +37,10 @@ Este catálogo cambia con frecuencia — verificar con `list_products` antes de 
 
 - Cualquier escritura en la tienda (cambiar precio, stock, pedidos, etc.) requiere confirmación explícita del usuario antes de ejecutarse — es producción real.
 - Pendiente (a futuro, no crear todavía): una skill de Claude Code para gestión habitual de esta tienda, y valorar un artefacto tipo dashboard (ej. productos sin precio/stock).
+
+### Regla de oro en Bricks: todo nativo, nada suelto
+
+- **Nunca `_cssCustom` ni CSS empotrado.** Todo ajuste visual pasa por controles nativos de Bricks (Background, Typography, Layout, Border, etc.), nunca por código CSS escrito a mano en un elemento o clase.
+- **Nunca hardcodear contenido que ya existe como dato real de la tienda.** Menús → módulo nativo de WordPress (`nav-menu` + menú real, no enlaces de texto sueltos). Login/registro → páginas y ajustes nativos de WooCommerce (`Mi cuenta`, `enableMyAccountRegistration`, etc.), nunca un enlace `#` o a un ID de página inventado. Colores → siempre la paleta nativa "Melopido" (`var(--rosa-empolvado)`, etc.), nunca un hex suelto que coincida "por casualidad".
+- **Nada suelto en el sistema de diseño.** Sin clases globales huérfanas, sin elementos sin etiquetar, sin enlaces a páginas/IDs que no existen. Después de cambios grandes, pasar `bricks/audit-design-system` + `bricks/list-orphaned-elements` y limpiar lo que salga (ver [feedback_bricks_delete_class_needs_retry] en memoria: `delete-global-class` a veces dice éxito sin borrar de verdad — volver a listar y reintentar).
+- Antes de borrar algo "sin uso", comprobar que el auditor no está dando un falso positivo por no seguir cadenas de variables (`--var-a: var(--var-b)`): si `--var-b` alimenta a `--var-a` y esa sí está en uso, borrar `--var-b` rompe el sitio aunque el auditor la marque como huérfana.

@@ -2,7 +2,7 @@
 
 Referencia de la identidad visual, extraída del CSS real de la web pública **melopido.shop** (la tienda ya publicada, fuente de verdad del diseño) y aplicada como estándar en **seda.melopido.shop** (Bricks).
 
-Última actualización: 2026-08-07.
+Última actualización: 2026-08-13.
 
 ## Tipografía
 
@@ -22,38 +22,43 @@ El identificador interno que usa Bricks en los ajustes de tipografía es `custom
 
 ## Colores
 
-Paleta de marca, confirmada por el usuario el 2026-08-07. Pendiente de crear como paleta de colores nativa en Bricks (`bricks/create-color-palette`) para sustituir/complementar la paleta actual "Bricks Wireframes" (solo grises neutros, heredada de la librería de wireframes).
+Paleta de marca nativa de Bricks: **"Melopido"** (id `4f1861`), creada vía `bricks/create-color-palette` / `bricks/create-color`. Todos los elementos del sitio referencian estos colores por variable (`var(--nombre)`), nunca por hex suelto — auditado y verificado el 2026-08-13 (`bricks/audit-design-system`, cero errores de color hardcodeado).
 
 ### Fondos
 
-| Nombre | Hex | Uso |
-|---|---|---|
-| Crema principal | `#F8F3EE` | Fondo general del sitio (Page Settings → Fondo del sitio, puesto en la plantilla header id 206 para que aplique a toda la web) |
-| Beige secundario | `#F4EFE8` | Fondos de tarjetas/secciones alternas |
-| Blanco | `#FFFFFF` | Fondos de bloques, tarjetas destacadas |
+| Nombre | Variable | Hex | Uso |
+|---|---|---|---|
+| Crema principal | `--crema-principal` | `#F8F3EE` | Fondo general del sitio (Page Settings → Fondo del sitio, puesto en la plantilla header id 206 para que aplique a toda la web) |
+| Beige secundario | `--beige-secundario` | `#F4EFE8` | Fondos de tarjetas/secciones alternas |
+| Blanco | `--blanco` | `#FFFFFF` | Fondos de bloques, tarjetas destacadas |
+| Blanco hueso | `--blanco-hueso` | `#FDFCFA` | Fondo de variaciones de producto, botón inactivo del quiz de color |
+| Beige borde | `--beige-borde` | `#D8D2CB` | Bordes de campos (ej. selector de cantidad) |
 
 ### Texto
 
-| Nombre | Hex | Uso |
-|---|---|---|
-| Texto principal | `#66605C` | Cuerpo de texto |
-| Texto secundario | `#7A736D` | Texto atenuado, descripciones cortas |
-| Negro casi puro | `#1F1F1F` | Títulos con máximo contraste si hace falta |
-| Blanco cálido | `#FFFAF7` | Texto sobre fotos/fondos oscuros (hero) |
+| Nombre | Variable | Hex | Uso |
+|---|---|---|---|
+| Texto principal | `--texto-principal` | `#66605C` | Cuerpo de texto |
+| Texto secundario | `--texto-secundario` | `#7A736D` | Texto atenuado, descripciones cortas |
+| Gris medio | `--gris-medio` | `#616161` | Etiquetas de formulario (Mi cuenta → editar dirección) |
+| Negro casi puro | `--negro-casi-puro` | `#1F1F1F` | Títulos con máximo contraste si hace falta |
+| Blanco cálido | `--blanco-calido` | `#FFFAF7` | Texto sobre fotos/fondos oscuros (hero) |
 
 ### Marca / acentos
 
-| Nombre | Hex | Uso |
-|---|---|---|
-| Rosa empolvado (principal) | `#C17D7A` | Botones CTA principales |
-| Terracota (variante/hover) | `#AC6764` | Estado hover o variante del rosa |
-| Naranja Amazon | `#F39200` | Botón "Comprar en Amazon" — diferenciado del CTA propio |
+| Nombre | Variable | Hex | Uso |
+|---|---|---|---|
+| Rosa empolvado (principal) | `--rosa-empolvado` | `#C17D7A` | Botones CTA principales |
+| Terracota (variante/hover) | `--terracota` | `#AC6764` | Estado hover o variante del rosa |
+| Naranja Amazon | `--naranja-amazon` | `#F39200` | Botón "Comprar en Amazon" — diferenciado del CTA propio |
+
+13 colores en total. Los 3 marcados arriba (blanco hueso, gris medio, beige borde) se añadieron el 2026-08-13 al detectar hex sueltos en clases globales existentes (`brxw-woo-add-to-cart`, `toggle-boton-activo/inactivo`, `brxw-woo-account-edit-address-01`) que no tenían variable asignada.
 
 ## Cómo cambiar esto desde el propio editor de Bricks
 
 - **Fondo del sitio**: plantilla "header" → Configuración de página (icono engranaje arriba del panel derecho) → pestaña General → "Fondo del sitio".
 - **Tipografía global**: Bricks → Ajustes → Theme Styles → "Melopido-style" → pestaña Tipografía.
-- **Colores**: Bricks → Ajustes → Paletas de color (una vez creada la paleta de marca).
+- **Colores**: Bricks → Ajustes → Paletas de color → paleta "Melopido".
 
 ## Regla de trabajo
 

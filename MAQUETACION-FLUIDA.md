@@ -17,9 +17,9 @@ clamp(V_min, calc(V_min + (V_max - V_min) * (100vw - 992px) / 928), V_max)
 - `928` = `1920 - 992`, el rango de crecimiento.
 - Por debajo de 992px o por encima de 1920px el valor se queda fijo en `V_min`/`V_max` (eso es lo que hace `clamp`).
 
-## Alcance actual: solo la ficha de producto
+## Alcance actual: ficha de producto + header
 
-Esto **todavía no está aplicado a toda la web**, solo a la plantilla de producto (`producto-mcp-claude`, id 521, la que usan las 6 fichas de "Funda de Seda"). Se hizo así a propósito, como prueba local antes de decidir si se extiende al resto del sitio (header, footer, otras plantillas).
+Todavía no está aplicado a toda la web: solo a la plantilla de producto (`producto-mcp-claude`, id 521, la que usan las 6 fichas de "Funda de Seda") y a `header-general` (id 206). Se hizo así a propósito, como prueba local antes de decidir si se extiende al resto del sitio (footer, otras plantillas).
 
 ### Textos convertidos a clamp fluido
 
@@ -67,7 +67,23 @@ En la rejilla de botones "otras medidas" (`Fila Otras Medidas`, 3 columnas × 2 
 
 Al revisar el resultado, la tarjeta "Título y precio" y la tarjeta "Color y carrito" se veían separadas por un hueco muy grande. No era un efecto de lo fluido: era que ambas tarjetas son blancas sobre un fondo de página también blanco (cambiamos el fondo global de crema a blanco antes en esta misma sesión), así que no había ningún borde visual entre ellas y el espaciado normal (padding + margen ≈ 80px) se leía como un vacío. Se arregló añadiendo una sombra sutil nativa (`_boxShadow`, `0 2px 12px` con negro al ~6% de opacidad) a ambas tarjetas, para que se distingan del fondo sin tocar el espaciado.
 
+## Header (`header-general`, id 206)
+
+El **logo sí escala** (se reconsideró a mitad de sesión: con todo lo demás creciendo, un logo fijo se veía pequeño/descompensado a 1920px), pero con un rango algo más comedido que el texto (×1.25 en vez de ×1.3) para que no domine.
+
+| Elemento | Rango (992px → 1920px) |
+|---|---|
+| Logo | 140×32px → 175×40px |
+| Menú principal (enlaces) | 15px → 19px |
+| "Iniciar sesión" / "Registrarse" / "Mi cuenta" (texto) | 15px → 19px |
+| Separador vertical (altura) | 20px → 26px |
+| Icono buscador | 25px → 32px |
+| Icono "Mi cuenta" | 25px → 32px |
+| Icono + subtotal del carrito | 20px → 26px |
+
+**Gotcha con los iconos SVG en Bricks**: cada icono tiene DOS ajustes de tamaño independientes — el del contenedor/botón que lo envuelve, y el `icon.height` del propio SVG. Hacer fluido solo el primero no basta: el SVG interior se queda con su `height` fijo (CSS generado tipo `#brxe-x svg {height: 25px}`) y visualmente no crece nada aunque el wrapper sí. Hay que aplicar el `clamp()` a los dos ajustes.
+
 ## Pendiente / próximos pasos
 
-- Decidir si se extiende el mismo tratamiento fluido a otras zonas de la web, empezando por el **header**.
+- Decidir si se extiende el mismo tratamiento fluido al **footer** y al resto de plantillas.
 - Si se decide llevar esto a nivel global (toda la web, no solo producto), la vía nativa sería `bricks/generate-scale-variables` para regenerar la escala `--brxw-text-*`/`--brxw-space-*` — de momento no se ha tocado esa escala global, todo lo de este documento son valores `clamp()` puestos a mano en elementos concretos de la ficha de producto.

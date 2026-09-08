@@ -30,6 +30,8 @@ Documento **exportable a cualquier proyecto** que use Bricks Builder gestionado 
 
 **Nunca un color en hexadecimal suelto — siempre la variable de la paleta nativa.** Todo color (fondo, texto, borde, sombra) se referencia como `var(--nombre-color)` de la paleta de colores nativa del Theme Style, nunca como un `#HEXCODE` escrito a mano en un ajuste, aunque "por casualidad" coincida con un color de la paleta. Si aparece un hexadecimal suelto (en un ajuste heredado, o pegado desde fuera por el usuario) y no hay ninguna variable existente que coincida exactamente, crear una nueva variable de paleta con ese valor antes de usarlo — nunca dejarlo como hex directo. Esto es lo que permite hacer cambios de marca (por ejemplo, cambiar un color en toda la web) tocando un solo sitio en vez de perseguir hexadecimales repetidos por todo el proyecto.
 
+**Esto incluye variantes con transparencia/opacidad — no es una excepción a la regla.** Es tentador pensar "para un blanco al 50% no hay forma nativa, así que aquí sí vale un hex con alpha" — es un error, comprobado en la práctica: existe una ability nativa para generar variantes transparentes/claras/oscuras de un color ya existente de la paleta (`bricks/generate-color-shades`, `shadeType:"transparent"`), que genera la variante exacta (ej. `hsl(0 0% 100% / 0.5)`) y la guarda como una variable real de la paleta (`var(--blanco-t-1)`). **Antes de escribir un hex "porque este caso concreto no tiene forma nativa", hay que comprobarlo de verdad buscando la ability correspondiente — no asumirlo.** Saltarse este paso no es un desliz menor: si hay reglas escritas, no se dan por buenas excepciones improvisadas sobre la marcha.
+
 ---
 
 ## 3. Cuándo SÍ usar el tema hijo (child theme) como excepción
@@ -102,7 +104,7 @@ La única vía legítima para CSS/JS real fuera de Bricks es el **tema hijo**, y
 - [ ] ¿Existe un control nativo de Bricks para esto? → usarlo. Si no estás seguro, comprobar el schema del elemento antes de descartarlo.
 - [ ] ¿De verdad no hay nativo? → decirlo al usuario, no inventar un workaround.
 - [ ] ¿Hace falta CSS/JS real? → tema hijo, un archivo por caso, carga condicional, nunca dentro de Bricks.
-- [ ] ¿Vas a poner un color? → variable de la paleta nativa, nunca un hexadecimal suelto.
+- [ ] ¿Vas a poner un color? → variable de la paleta nativa, nunca un hexadecimal suelto. Incluye transparencias: busca la ability de variantes (`generate-color-shades`) antes de asumir que hace falta un hex con alpha.
 - [ ] ¿Vas a redimensionar un icono SVG? → revisa si hay dos ajustes de tamaño (wrapper + icono interior), no solo uno.
 - [ ] ¿Un tamaño fijado por CSS no se respeta dentro de un flex? → prueba `flex-shrink: 0` antes de sospechar de la cascada.
 - [ ] ¿Vas a borrar clases/variables "sin uso"? → traza cadenas de variables a mano primero, y vuelve a listar tras borrar para reintentar lo que sobreviva.

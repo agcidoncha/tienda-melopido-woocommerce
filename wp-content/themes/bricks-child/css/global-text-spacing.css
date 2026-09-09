@@ -1,0 +1,14 @@
+/* Espaciado entre párrafos consecutivos, en toda la web.
+   Bricks genera este selector desde su ajuste nativo "Contextual
+   spacing" (Theme Style), pero siempre usando margin-block-start, sin
+   ningún control nativo para cambiarlo a margin-block-end. Bricks
+   además repite esta misma regla en un bloque de estilos inline que
+   carga DESPUÉS de este archivo (orden que no podemos controlar), así
+   que con la misma especificidad gana siempre el suyo -> !important
+   es el escape legítimo aquí, no hay otra forma de ganar. */
+.brxe-text * + p,
+.brxe-post-content:not([data-source="bricks"]) * + p,
+body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommerce-account-form-edit-account *) {
+	margin-block-start: 0 !important;
+	margin-block-end: 1em !important;
+}

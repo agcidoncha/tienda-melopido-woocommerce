@@ -18,6 +18,31 @@ add_filter( 'gettext', function ( $translated, $original, $domain ) {
 add_action( 'wp_enqueue_scripts', function() {
 	wp_enqueue_style( 'bricks-child', get_stylesheet_uri(), ['bricks-frontend'], filemtime( get_stylesheet_directory() . '/style.css' ) );
 
+	// Estilos del minicarrito del header (en todas las páginas, no solo producto)
+	wp_enqueue_style(
+		'minicart',
+		get_stylesheet_directory_uri() . '/css/minicart.css',
+		[ 'bricks-child' ],
+		filemtime( get_stylesheet_directory() . '/css/minicart.css' )
+	);
+
+	// Oculta el precio del minicarrito del header cuando el carrito está vacío
+	// (en todas las páginas, no solo producto)
+	wp_enqueue_style(
+		'minicart-subtotal-vacio',
+		get_stylesheet_directory_uri() . '/css/minicart-subtotal-vacio.css',
+		[ 'bricks-child' ],
+		filemtime( get_stylesheet_directory() . '/css/minicart-subtotal-vacio.css' )
+	);
+
+	// Espaciado de párrafos consecutivos (en todas las páginas)
+	wp_enqueue_style(
+		'global-text-spacing',
+		get_stylesheet_directory_uri() . '/css/global-text-spacing.css',
+		[ 'bricks-child' ],
+		filemtime( get_stylesheet_directory() . '/css/global-text-spacing.css' )
+	);
+
 	// Estilos y script del selector de color de variaciones (solo en página de producto individual)
 	if ( function_exists( 'is_product' ) && is_product() ) {
 		wp_enqueue_style(

@@ -1,0 +1,62 @@
+/* Minicarrito (header): sin control nativo de Bricks para esto.
+   Bricks trae su propio CSS base para el minicarrito
+   (woocommerce-layer.min.css) con reglas más específicas que las
+   nuestras si solo usamos clases -> por eso se usa el ID del elemento
+   (#brxe-v5t508) aquí: un selector con ID gana siempre a uno solo con
+   clases, sin necesidad de !important.
+
+   Layout en 3 columnas (imagen | nombre+precio | cerrar). Desde que
+   la plantilla mini-cart.php (sobrescrita en este tema) envuelve el
+   nombre en su propio <span class="mini-cart-item-name">, ya no hace
+   falta ningún truco de grid/display:contents: la imagen y el botón
+   de quitar se sacan del flujo con position:absolute, dejando el
+   nombre y el precio como bloques normales, uno debajo del otro. */
+
+#brxe-v5t508 .cart-detail li {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: 100px;
+	padding-inline-start: 112px;
+	padding-inline-end: 34px;
+}
+
+#brxe-v5t508 .cart-detail li a:not(.remove) img {
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#brxe-v5t508 .cart-detail li .mini-cart-item-name {
+	display: block;
+	font-size: var(--brxw-text-s);
+	line-height: 1.2;
+}
+
+#brxe-v5t508 .cart-detail li .quantity {
+	display: block;
+	margin: 4px 0 0;
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--rosa-empolvado);
+}
+
+#brxe-v5t508 .cart-detail li .remove {
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background-color: var(--terracota);
+	color: #ffffff;
+	font-size: 16px;
+	line-height: 1;
+	opacity: 1;
+}

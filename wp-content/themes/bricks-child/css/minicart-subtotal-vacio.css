@@ -1,0 +1,13 @@
+/* Precio del carrito en el header ("0,00 €"): sin control nativo de
+   Bricks para ocultarlo solo cuando el carrito está vacío (el ajuste
+   "Posición" del subtotal solo admite mostrar siempre u ocultar
+   siempre). El contador (.cart-count) sí alterna nativamente entre
+   las clases "hide"/"show" vía los fragments de WooCommerce al
+   añadir/quitar productos (ver woocommerce.php del tema padre) — nos
+   apoyamos en esa misma clase con :has() para ocultar el precio en
+   el mismo momento, sin JS ni MutationObserver: :has() reevalúa solo
+   cuando WooCommerce reemplaza el fragment con la nueva clase. */
+
+#brxe-v5t508 .mini-cart-link:has(.cart-count.hide) .cart-subtotal {
+	display: none;
+}

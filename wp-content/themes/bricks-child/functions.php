@@ -140,6 +140,11 @@ add_filter( 'bricks/dynamic_tags_list', function( $tags ) {
 		'label' => 'Enlace de medida (la medida actual sale sin enlace)',
 		'group' => 'Custom',
 	];
+	$tags[] = [
+		'name'  => '{random_hero_video}',
+		'label' => 'Vídeo aleatorio del hero (carpeta /video/)',
+		'group' => 'Custom',
+	];
 
 	return $tags;
 } );
@@ -165,6 +170,30 @@ function melopido_render_measure_link( $post_id ) {
 	return '<a href="' . esc_url( get_permalink( $post_id ) ) . '">' . esc_html( $measure ) . '</a>';
 }
 
+/**
+ * Fondo de vídeo del hero: elige al azar, en cada carga de página, uno de
+ * los archivos "hero-*.mp4" presentes en /video/. Añadir un vídeo nuevo es
+ * simplemente subir el archivo por SFTP con ese patrón de nombre — no hace
+ * falta tocar código ni el número de vídeos disponibles.
+ *
+ * Se resuelve en PHP (no en JS) para que el HTML ya llegue con la URL
+ * correcta: el elemento "video" de Bricks carga el vídeo mediante
+ * "data-src" (lazy load) y sustituirlo por JS tras la carga competiría con
+ * ese mismo mecanismo.
+ */
+function melopido_get_random_hero_video() {
+	static $chosen = null;
+
+	if ( $chosen === null ) {
+		$files  = glob( ABSPATH . 'video/hero-*.mp4' );
+		$chosen = ! empty( $files )
+			? home_url( '/video/' . rawurlencode( basename( $files[ array_rand( $files ) ] ) ) )
+			: '';
+	}
+
+	return $chosen;
+}
+
 add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 'text' ) {
 	if ( $tag === 'measure' || $tag === '{measure}' ) {
 		return melopido_get_measure_from_title( $post->ID );
@@ -172,6 +201,10 @@ add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 
 
 	if ( $tag === 'measure_link' || $tag === '{measure_link}' ) {
 		return melopido_render_measure_link( $post->ID );
+	}
+
+	if ( $tag === 'random_hero_video' || $tag === '{random_hero_video}' ) {
+		return melopido_get_random_hero_video();
 	}
 
 	return $tag;
@@ -184,6 +217,10 @@ add_filter( 'bricks/dynamic_data/render_content', function( $content, $post, $co
 
 	if ( strpos( $content, '{measure_link}' ) !== false ) {
 		$content = str_replace( '{measure_link}', melopido_render_measure_link( $post->ID ), $content );
+	}
+
+	if ( strpos( $content, '{random_hero_video}' ) !== false ) {
+		$content = str_replace( '{random_hero_video}', melopido_get_random_hero_video(), $content );
 	}
 
 	return $content;

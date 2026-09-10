@@ -145,6 +145,11 @@ add_filter( 'bricks/dynamic_tags_list', function( $tags ) {
 		'label' => 'Vídeo aleatorio del hero (carpeta /video/)',
 		'group' => 'Custom',
 	];
+	$tags[] = [
+		'name'  => '{random_hero_video_poster}',
+		'label' => 'Póster del vídeo aleatorio del hero (mismo archivo elegido, en .jpg)',
+		'group' => 'Custom',
+	];
 
 	return $tags;
 } );
@@ -173,25 +178,51 @@ function melopido_render_measure_link( $post_id ) {
 /**
  * Fondo de vídeo del hero: elige al azar, en cada carga de página, uno de
  * los archivos "hero-*.mp4" presentes en /video/. Añadir un vídeo nuevo es
- * simplemente subir el archivo por SFTP con ese patrón de nombre — no hace
- * falta tocar código ni el número de vídeos disponibles.
+ * subir el .mp4 con ese patrón de nombre MÁS un póster con el mismo
+ * nombre en .jpg (ej. hero-3.mp4 + hero-3.jpg) — no hace falta tocar
+ * código ni el número de vídeos disponibles. Si falta el .jpg de alguno,
+ * ese vídeo se sigue eligiendo pero sin póster (degradación aceptable).
+ *
+ * El vídeo y su póster se eligen juntos (misma variable estática) para
+ * que siempre coincidan entre sí — antes, con un póster fijo, al elegir
+ * un vídeo distinto se veía el póster de otro vídeo durante un instante.
  *
  * Se resuelve en PHP (no en JS) para que el HTML ya llegue con la URL
  * correcta: el elemento "video" de Bricks carga el vídeo mediante
  * "data-src" (lazy load) y sustituirlo por JS tras la carga competiría con
  * ese mismo mecanismo.
  */
-function melopido_get_random_hero_video() {
-	static $chosen = null;
+function melopido_get_random_hero_media() {
+	static $media = null;
 
-	if ( $chosen === null ) {
-		$files  = glob( ABSPATH . 'video/hero-*.mp4' );
-		$chosen = ! empty( $files )
-			? home_url( '/video/' . rawurlencode( basename( $files[ array_rand( $files ) ] ) ) )
-			: '';
+	if ( $media === null ) {
+		$files = glob( ABSPATH . 'video/hero-*.mp4' );
+
+		if ( empty( $files ) ) {
+			$media = [
+				'video'  => '',
+				'poster' => '',
+			];
+		} else {
+			$file        = $files[ array_rand( $files ) ];
+			$poster_file = preg_replace( '/\.mp4$/i', '.jpg', $file );
+
+			$media = [
+				'video'  => home_url( '/video/' . rawurlencode( basename( $file ) ) ),
+				'poster' => file_exists( $poster_file ) ? home_url( '/video/' . rawurlencode( basename( $poster_file ) ) ) : '',
+			];
+		}
 	}
 
-	return $chosen;
+	return $media;
+}
+
+function melopido_get_random_hero_video() {
+	return melopido_get_random_hero_media()['video'];
+}
+
+function melopido_get_random_hero_video_poster() {
+	return melopido_get_random_hero_media()['poster'];
 }
 
 add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 'text' ) {
@@ -205,6 +236,10 @@ add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 
 
 	if ( $tag === 'random_hero_video' || $tag === '{random_hero_video}' ) {
 		return melopido_get_random_hero_video();
+	}
+
+	if ( $tag === 'random_hero_video_poster' || $tag === '{random_hero_video_poster}' ) {
+		return melopido_get_random_hero_video_poster();
 	}
 
 	return $tag;
@@ -221,6 +256,10 @@ add_filter( 'bricks/dynamic_data/render_content', function( $content, $post, $co
 
 	if ( strpos( $content, '{random_hero_video}' ) !== false ) {
 		$content = str_replace( '{random_hero_video}', melopido_get_random_hero_video(), $content );
+	}
+
+	if ( strpos( $content, '{random_hero_video_poster}' ) !== false ) {
+		$content = str_replace( '{random_hero_video_poster}', melopido_get_random_hero_video_poster(), $content );
 	}
 
 	return $content;

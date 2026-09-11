@@ -12,3 +12,16 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
 	margin-block-start: 0 !important;
 	margin-block-end: 1em !important;
 }
+
+/* Sangría de listas (ul/ol) dentro del texto de los acordeones de
+   producto (contenido libre desde ACF, no un elemento de lista nativo
+   de Bricks — sin control nativo para su sangría). El navegador aplica
+   40px fijos por defecto, un valor que no se reduce aunque el texto sí
+   lo haga en móvil, así que a partir de cierto punto la sangría se come
+   la mayor parte del ancho disponible. */
+@media (max-width: 767px) {
+	.brxw-product-accordion-01__text ul,
+	.brxw-product-accordion-01__text ol {
+		padding-left: 20px;
+	}
+}

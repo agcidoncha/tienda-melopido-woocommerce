@@ -16,6 +16,31 @@
 	transition: box-shadow 0.2s ease;
 }
 
+/* Tamaño de los círculos de color fluido (992px→1920px), igual que el
+   resto de la ficha de producto (ver MAQUETACION-FLUIDA.md). El plugin
+   (WPVS) fija su propio tamaño en vi-wpvs-variation-button-select/
+   vi-wpvs-option-wrap con la misma especificidad que aquí, por eso hace
+   falta !important para ganar de forma fiable. Además el wrap es un
+   flex-item con flex-shrink:1 por defecto del plugin: sin flex-shrink:0
+   el contenedor lo encoge por debajo del width fijado en cuanto no cabe
+   todo en una fila, ignorando silenciosamente el clamp. */
+.vi-wpvs-variation-wrap.vi-wpvs-variation-wrap-vi_wpvs_color_design .vi-wpvs-variation-button-select,
+.vi-wpvs-variation-wrap.vi-wpvs-variation-wrap-vi_wpvs_color_design .vi-wpvs-option-wrap {
+	width: clamp(36px, calc(36px + 14 * (100vw - 992px) / 928), 50px) !important;
+	height: clamp(36px, calc(36px + 14 * (100vw - 992px) / 928), 50px) !important;
+	flex-shrink: 0 !important;
+	/* 50% en vez de un valor fijo en px: así el círculo es perfecto a
+	   cualquier tamaño del rango fluido, sin depender de que el radio
+	   siga el crecimiento del width/height a mano. */
+	border-radius: 50% !important;
+}
+
+/* Etiqueta "Color:" fluida (992px→1920px), 18px es el máximo a ancho
+   completo (ver MAQUETACION-FLUIDA.md). */
+.brxw-woo-add-to-cart.brxe-product-add-to-cart table.variations label {
+	font-size: clamp(14px, calc(14px + 4 * (100vw - 992px) / 928), 18px) !important;
+}
+
 .vi-wpvs-option-wrap-selected .vi-wpvs-option-color {
 	box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #c17d7a;
 }
@@ -129,8 +154,21 @@ table.variations {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
-	gap: 10px;
+	gap: clamp(10px, calc(10px + 6 * (100vw - 992px) / 928), 16px);
 	margin-bottom: 16px;
+}
+
+/* Cantidad y total fluidos (992px→1920px), igual que el resto de la
+   ficha de producto (ver MAQUETACION-FLUIDA.md). Los iconos +/- son SVG
+   con width/height como atributo HTML: esos atributos son "presentation
+   attributes" y el CSS los sobreescribe sin necesitar !important. */
+.cantidad-total-row .quantity input.qty {
+	font-size: clamp(15px, calc(15px + 4 * (100vw - 992px) / 928), 19px);
+}
+
+.cantidad-total-row .quantity .action svg {
+	width: clamp(24px, calc(24px + 6 * (100vw - 992px) / 928), 30px);
+	height: clamp(24px, calc(24px + 6 * (100vw - 992px) / 928), 30px);
 }
 
 .precio-total-dinamico {
@@ -141,7 +179,7 @@ table.variations {
 
 .precio-total-label {
 	font-family: Montserrat, sans-serif;
-	font-size: 12px;
+	font-size: clamp(12px, calc(12px + 3 * (100vw - 992px) / 928), 15px);
 	line-height: 1;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
@@ -150,10 +188,53 @@ table.variations {
 
 .precio-total-valor {
 	font-family: PlayfairDisplay, serif;
-	font-size: 22px;
+	font-size: clamp(22px, calc(22px + 10 * (100vw - 992px) / 928), 32px);
 	line-height: 1;
 	font-weight: 700;
 	color: #1f1f1f;
+}
+
+/* A partir de ~1300px de ancho de VENTANA (no 992px, el punto de
+   referencia habitual del resto de la ficha, ver MAQUETACION-FLUIDA.md)
+   es cuando la tarjeta "Color y carrito" tiene sitio real para poner
+   cantidad+total y el botón "Añadir al carrito" en la misma fila: por
+   debajo de eso, el mínimo que necesita el botón (~260px, para que el
+   texto no toque el padding) más el mínimo de cantidad+total (~290px)
+   no caben en la tarjeta y se sale del contenedor. Por debajo de 1300px
+   se queda apilado (botón a todo lo ancho), como estaba antes. */
+@media (min-width: 1300px) {
+	/* Bricks genera ".brxw-woo-add-to-cart.brxe-product-add-to-cart
+	   form.cart.variations_form .woocommerce-variation-add-to-cart" (4
+	   clases) desde el ajuste nativo del elemento; hace falta !important
+	   para ganarle con un selector de una sola clase. */
+	.woocommerce-variation-add-to-cart {
+		flex-direction: row !important;
+		align-items: center !important;
+		gap: 24px !important;
+	}
+
+	/* 50/50 cuando hay sitio, pero con un mínimo garantizado: cantidad+
+	   total no puede bajar de 290px (su min-content real: ~200px del
+	   control de cantidad + ~77px del texto del total + gap). Si el 50%
+	   real es menor que eso, es el botón el que cede ese espacio de más
+	   — tiene mucho más margen para estrecharse sin romperse al ser una
+	   sola línea de texto. */
+	.woocommerce-variation-add-to-cart .cantidad-total-row {
+		flex: 1 1 max(50%, 290px) !important;
+		flex-wrap: nowrap !important;
+		margin-bottom: 0 !important;
+	}
+
+	/* El botón también necesita un mínimo: por debajo de él el texto
+	   "Añadir al carrito" se queda sin aire dentro del padding (llega a
+	   tocar el borde). A partir de aquí es cantidad+total quien cede
+	   (su min-content real aguanta bastante más estrechez que un botón
+	   con texto de una palabra larga). */
+	.woocommerce-variation-add-to-cart .single_add_to_cart_button {
+		flex: 1 1 50% !important;
+		min-width: 260px !important;
+		width: auto !important;
+	}
 }
 
 /* Barra fija inferior (móvil): respeta el borde inferior con gesto/notch
@@ -204,9 +285,8 @@ table.variations {
 	transform: rotate(180deg);
 }
 
-@media (max-width: 767px) {
-	body.single-product {
-		padding-bottom: 90px;
-	}
-}
-
+/* El padding-bottom del body que evita que la barra fija tape el footer
+   ya NO se fija aquí con un valor en px (se quedaba corto en cuanto la
+   barra cambiaba de alto según su estado) — ver barra-sticky-movil.js,
+   que lo mantiene sincronizado con el alto real de la barra en cada
+   cambio (ResizeObserver). */

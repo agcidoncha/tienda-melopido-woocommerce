@@ -15,6 +15,19 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		return;
 	}
 
+	/* --- Reservar hueco real para el footer ---
+	   La barra cambia de alto según su estado (con/sin color elegido,
+	   desplegable de colores abierto/cerrado), así que un padding-bottom
+	   fijo en CSS se queda corto o largo según el caso y llega a tapar el
+	   final del footer. Se mantiene sincronizado con el alto real en cada
+	   cambio. */
+	function fijarHuecoFooter() {
+		document.body.style.paddingBottom = barra.offsetHeight + 'px';
+	}
+	var actualizarHuecoFooter = new ResizeObserver( fijarHuecoFooter );
+	actualizarHuecoFooter.observe( barra );
+	fijarHuecoFooter();
+
 	var pildora = barra.querySelector( '.barra-pildora-color' );
 	var circulo = barra.querySelector( '.barra-circulo-color' );
 	var nombre = barra.querySelector( '.barra-nombre-color' );

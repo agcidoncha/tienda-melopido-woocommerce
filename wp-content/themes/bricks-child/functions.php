@@ -1,5 +1,23 @@
 <?php
 /**
+ * [2026-09-11] Migas de pan: se quita el último tramo (la página actual).
+ * WooCommerce lo añade siempre con su propio enlace (aunque la plantilla
+ * nunca lo pinte como link, por ser el último), así que no basta con
+ * comprobar si el enlace está vacío — hay que quitarlo sin condición. Es
+ * texto suelto sin su propia etiqueta —no hay control nativo en el
+ * elemento de Bricks para ocultar solo ese tramo— y además es redundante
+ * con el título de la página, que ya lo repite justo debajo. Sin este
+ * tramo, la miga de pan es más corta y cabe en una línea en móvil.
+ */
+add_filter( 'woocommerce_get_breadcrumb', function( $crumbs ) {
+	if ( count( $crumbs ) > 1 ) {
+		array_pop( $crumbs );
+	}
+
+	return $crumbs;
+} );
+
+/**
  * El enlace para deshacer la variación seleccionada usa el texto "Limpiar"
  * (cadena traducida del núcleo de WooCommerce). Lo sustituimos por "Quitar",
  * que describe mejor la acción, sin tocar plantillas ni el DOM.

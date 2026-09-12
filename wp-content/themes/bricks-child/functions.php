@@ -53,6 +53,17 @@ add_action( 'wp_enqueue_scripts', function() {
 		filemtime( get_stylesheet_directory() . '/css/minicart-subtotal-vacio.css' )
 	);
 
+	// Red de seguridad para la carga diferida de Bricks (ver comentario
+	// dentro del archivo): en todas las páginas, es un fallo del propio
+	// Bricks, no algo específico de una plantilla.
+	wp_enqueue_script(
+		'lazy-load-fallback',
+		get_stylesheet_directory_uri() . '/js/lazy-load-fallback.js',
+		[ 'bricks-scripts' ],
+		filemtime( get_stylesheet_directory() . '/js/lazy-load-fallback.js' ),
+		true
+	);
+
 	// Espaciado de párrafos consecutivos (en todas las páginas)
 	wp_enqueue_style(
 		'global-text-spacing',

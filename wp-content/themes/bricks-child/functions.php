@@ -243,6 +243,34 @@ function melopido_get_random_hero_video_poster() {
 	return melopido_get_random_hero_media()['poster'];
 }
 
+/**
+ * [2026-09-12] Precarga el vídeo del hero (LCP de la home en Lighthouse:
+ * 5,0s en móvil). Bricks marca el elemento "video" con "data-src" (carga
+ * en diferido) sin ningún ajuste nativo para evitarlo — ni en el propio
+ * elemento ni en el deslizador que lo contiene —, así que el navegador
+ * no se entera de que hace falta hasta que corre el JavaScript del
+ * lazy-load. Con este preload, apuntando al mismo vídeo que ya elige
+ * {random_hero_video} (misma función, incluida la caché de la petición,
+ * así que siempre coincide con el que se acaba renderizando), el
+ * navegador empieza a descargarlo desde el primer instante.
+ */
+add_action( 'wp_head', function () {
+	if ( ! is_front_page() ) {
+		return;
+	}
+
+	$video_url = melopido_get_random_hero_video();
+
+	if ( ! $video_url ) {
+		return;
+	}
+
+	printf(
+		'<link rel="preload" as="video" href="%s" fetchpriority="high">' . "\n",
+		esc_url( $video_url )
+	);
+}, 1 );
+
 add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 'text' ) {
 	if ( $tag === 'measure' || $tag === '{measure}' ) {
 		return melopido_get_measure_from_title( $post->ID );

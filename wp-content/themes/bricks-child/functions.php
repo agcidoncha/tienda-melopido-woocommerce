@@ -1,5 +1,118 @@
 <?php
 /**
+ * [2026-09-12] El plugin de WooCommerce Stripe Gateway carga su script base
+ * (stripe.js, ~250KB + inicialización del Payment Element) en la ficha de
+ * producto AUNQUE los botones de pago rápido estén desactivados ahí (ver
+ * ajuste express_checkout_button_locations/amazon_pay_button_locations/
+ * link_button_locations), "por si acaso" — comportamiento por defecto del
+ * propio plugin (WC_Stripe_Helper::should_load_scripts_on_product_page()).
+ * La ficha de producto de esta tienda no tiene ningún formulario de pago
+ * (solo "Añadir al carrito"), así que no hace falta ahí; confirmado que
+ * sigue cargando correctamente en carrito y checkout. Se usa el filtro que
+ * el propio plugin expone para este caso exacto, no un parche al core.
+ */
+add_filter( 'wc_stripe_load_scripts_on_product_page_when_prbs_disabled', '__return_false' );
+
+/**
+ * [2026-09-12] WooCommerce fija "loading=lazy" a mano en el HTML de TODAS las
+ * imágenes de la galería del producto (wc_get_gallery_image_html(), incluida
+ * la principal), sin pasar por el mecanismo de conteo de WordPress que ese
+ * filtro controla. Se usa el filtro específico que WooCommerce expone para
+ * los atributos de esa imagen, y solo se toca cuando $main_image es true —
+ * las miniaturas de abajo siguen con carga diferida, que ahí sí conviene.
+ */
+add_filter( 'woocommerce_gallery_image_html_attachment_image_params', function ( $params, $attachment_id, $image_size, $main_image ) {
+	if ( $main_image ) {
+		$params['loading']       = 'eager';
+		$params['fetchpriority'] = 'high';
+	}
+
+	return $params;
+}, 10, 4 );
+
+/**
+ * [2026-09-12] Precarga de las tipografías de marca (Montserrat y
+ * PlayfairDisplay). Causa real del CLS que seguía apareciendo de forma
+ * intermitente en toda la web (0,4-0,7 según la ejecución): estos archivos
+ * tardan en llegar bajo limitación de red, y hasta que lo hacen el texto se
+ * pinta con la fuente de reserva del sistema -de métricas distintas-, así
+ * que en cuanto la tipografía real llega y se aplica, el texto se
+ * reajusta y empuja todo lo que hay debajo. Cuanto antes empiece a
+ * descargarse la fuente, antes se resuelve ese cambio y menos posibilidad
+ * hay de que ocurra después del primer pintado. Sin ajuste nativo en
+ * Bricks para precargar tipografías subidas como Custom Fonts.
+ */
+add_action( 'wp_head', function () {
+	$fonts = [
+		'Montserrat-Regular.woff2',
+		'Montserrat-Medium.woff2',
+		'Montserrat-SemiBold.woff2',
+		'PlayfairDisplay-Medium.woff2',
+	];
+
+	foreach ( $fonts as $font ) {
+		printf(
+			'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin>' . "\n",
+			esc_url( content_url( '/uploads/2026/06/' . $font ) )
+		);
+	}
+}, 1 );
+
+/**
+ * [2026-09-12] Datos estructurados FAQPage para la ficha de producto, a
+ * partir del acordeón "Preguntas frecuentes" (campo ACF "acordeon4": una
+ * pregunta por <h4>, la respuesta en el <p> siguiente) que ya existe y se
+ * rellena por producto -no se inventa contenido nuevo, solo se expone el
+ * que ya hay de forma que los motores de IA (ChatGPT, Gemini, Claude...) lo
+ * puedan leer y citar directamente. Google ya no muestra el rich snippet
+ * visual de FAQ salvo en sitios muy concretos, pero el marcado lo siguen
+ * usando los motores de búsqueda por IA para entender la página.
+ */
+add_action( 'wp_head', function () {
+	if ( ! is_product() ) {
+		return;
+	}
+
+	global $product;
+	if ( ! $product instanceof WC_Product ) {
+		return;
+	}
+
+	$faq_html = get_post_meta( $product->get_id(), 'acordeon4', true );
+	if ( empty( $faq_html ) ) {
+		return;
+	}
+
+	preg_match_all( '/<h4>(.*?)<\/h4>\s*<p>(.*?)<\/p>/is', $faq_html, $matches, PREG_SET_ORDER );
+	if ( empty( $matches ) ) {
+		return;
+	}
+
+	$questions = [];
+	foreach ( $matches as $match ) {
+		$questions[] = [
+			'@type'          => 'Question',
+			'name'           => wp_strip_all_tags( $match[1] ),
+			'acceptedAnswer' => [
+				'@type' => 'Answer',
+				'text'  => wp_strip_all_tags( $match[2] ),
+			],
+		];
+	}
+
+	$schema = [
+		'@context'   => 'https://schema.org',
+		'@type'      => 'FAQPage',
+		'mainEntity' => $questions,
+	];
+
+	printf(
+		'<script type="application/ld+json">%s</script>' . "\n",
+		wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES )
+	);
+}, 20 );
+
+/**
  * [2026-09-11] Migas de pan: se quita el último tramo (la página actual).
  * WooCommerce lo añade siempre con su propio enlace (aunque la plantilla
  * nunca lo pinte como link, por ser el último), así que no basta con

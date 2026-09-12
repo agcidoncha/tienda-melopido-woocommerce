@@ -1,0 +1,25 @@
+# Melopido
+
+> Melopido vende fundas de almohada de seda de morera (Mulberry) 100%, con un gramaje de 22 momme, en 6 tallas distintas. El objetivo del producto es cuidar la piel y el cabello durante el sueño, reduciendo la fricción frente a otros tejidos.
+
+## Producto
+
+- [Fundas de Seda](https://seda.melopido.shop/fundas-de-seda/): categoría con las 6 tallas disponibles.
+- [Funda de Seda 75×50 cm (Infantil)](https://seda.melopido.shop/funda-seda-75x50/)
+- [Funda de Seda 90×45 cm (Individual)](https://seda.melopido.shop/funda-seda-90x45/)
+- [Funda de Seda 110×45 cm (Individual XL)](https://seda.melopido.shop/funda-seda-110x45/)
+- [Funda de Seda 120×45 cm (Matrimonio)](https://seda.melopido.shop/funda-seda-120x45/)
+- [Funda de Seda 135×45 cm (Matrimonio XL)](https://seda.melopido.shop/funda-seda-135x45/)
+- [Funda de Seda 150×45 cm (Grande)](https://seda.melopido.shop/funda-seda-150x45/)
+
+## Datos clave del producto
+
+- Composición: seda de morera 100%.
+- Gramaje: 22 momme.
+- Cierre: tipo sobre, sin cremalleras ni elementos rígidos.
+- Colores: disponible en varios tonos por talla.
+
+## Notas para agentes de IA
+
+- Cada talla tiene su propia página, precio y descripción — no asumir que son intercambiables.
+- Las preguntas frecuentes de cada ficha de producto están también disponibles como datos estructurados (schema.org FAQPage) en la propia página.

@@ -36,21 +36,16 @@ add_filter( 'gettext', function ( $translated, $original, $domain ) {
 add_action( 'wp_enqueue_scripts', function() {
 	wp_enqueue_style( 'bricks-child', get_stylesheet_uri(), ['bricks-frontend'], filemtime( get_stylesheet_directory() . '/style.css' ) );
 
-	// Estilos del minicarrito del header (en todas las páginas, no solo producto)
+	// CSS del tema hijo que se carga en toda la web, combinado en un
+	// único archivo (ver comentario dentro del archivo) para quitar
+	// peticiones bloqueantes de la ruta crítica — antes eran 4 archivos
+	// sueltos (minicart, minicart-subtotal-vacio, global-text-spacing,
+	// hero-slider-height).
 	wp_enqueue_style(
-		'minicart',
-		get_stylesheet_directory_uri() . '/css/minicart.css',
+		'sitewide',
+		get_stylesheet_directory_uri() . '/css/sitewide.css',
 		[ 'bricks-child' ],
-		filemtime( get_stylesheet_directory() . '/css/minicart.css' )
-	);
-
-	// Oculta el precio del minicarrito del header cuando el carrito está vacío
-	// (en todas las páginas, no solo producto)
-	wp_enqueue_style(
-		'minicart-subtotal-vacio',
-		get_stylesheet_directory_uri() . '/css/minicart-subtotal-vacio.css',
-		[ 'bricks-child' ],
-		filemtime( get_stylesheet_directory() . '/css/minicart-subtotal-vacio.css' )
+		filemtime( get_stylesheet_directory() . '/css/sitewide.css' )
 	);
 
 	// Red de seguridad para la carga diferida de Bricks (ver comentario
@@ -62,26 +57,6 @@ add_action( 'wp_enqueue_scripts', function() {
 		[ 'bricks-scripts' ],
 		filemtime( get_stylesheet_directory() . '/js/lazy-load-fallback.js' ),
 		true
-	);
-
-	// Causa real del CLS de la home (ver comentario dentro del archivo):
-	// la altura del deslizador del hero la fija Splide por JavaScript, no
-	// CSS. Solo hace falta en portada.
-	if ( is_front_page() ) {
-		wp_enqueue_style(
-			'hero-slider-height',
-			get_stylesheet_directory_uri() . '/css/hero-slider-height.css',
-			[ 'bricks-child' ],
-			filemtime( get_stylesheet_directory() . '/css/hero-slider-height.css' )
-		);
-	}
-
-	// Espaciado de párrafos consecutivos (en todas las páginas)
-	wp_enqueue_style(
-		'global-text-spacing',
-		get_stylesheet_directory_uri() . '/css/global-text-spacing.css',
-		[ 'bricks-child' ],
-		filemtime( get_stylesheet_directory() . '/css/global-text-spacing.css' )
 	);
 
 	// Estilos y script del selector de color de variaciones (solo en página de producto individual)

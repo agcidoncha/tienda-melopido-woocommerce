@@ -1,0 +1,143 @@
+/**
+ * [2026-09-12] CSS del tema hijo que se carga en toda la web, combinado
+ * en un único archivo para quitar peticiones bloqueantes de la ruta
+ * crítica (Lighthouse: "Solicitudes que bloquean el renderizado" —
+ * cada archivo suelto cuesta ~150-450ms bajo limitación de red móvil,
+ * aunque pese poco, por la sobrecarga propia de cada petición).
+ *
+ * Antes eran 4 archivos separados (minicart.css,
+ * minicart-subtotal-vacio.css, global-text-spacing.css,
+ * hero-slider-height.css) — se mantienen los comentarios originales de
+ * cada uno para no perder el porqué de cada regla.
+ */
+
+/* === minicart.css ===
+   Minicarrito (header): sin control nativo de Bricks para esto.
+   Bricks trae su propio CSS base para el minicarrito
+   (woocommerce-layer.min.css) con reglas más específicas que las
+   nuestras si solo usamos clases -> por eso se usa el ID del elemento
+   (#brxe-v5t508) aquí: un selector con ID gana siempre a uno solo con
+   clases, sin necesidad de !important.
+
+   Layout en 3 columnas (imagen | nombre+precio | cerrar). Desde que
+   la plantilla mini-cart.php (sobrescrita en este tema) envuelve el
+   nombre en su propio <span class="mini-cart-item-name">, ya no hace
+   falta ningún truco de grid/display:contents: la imagen y el botón
+   de quitar se sacan del flujo con position:absolute, dejando el
+   nombre y el precio como bloques normales, uno debajo del otro. */
+
+#brxe-v5t508 .cart-detail li {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: 100px;
+	padding-inline-start: 112px;
+	padding-inline-end: 34px;
+}
+
+#brxe-v5t508 .cart-detail li a:not(.remove) img {
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#brxe-v5t508 .cart-detail li .mini-cart-item-name {
+	display: block;
+	font-size: var(--brxw-text-s);
+	line-height: 1.2;
+}
+
+#brxe-v5t508 .cart-detail li .quantity {
+	display: block;
+	margin: 4px 0 0;
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--rosa-empolvado);
+}
+
+#brxe-v5t508 .cart-detail li .remove {
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background-color: var(--terracota);
+	color: #ffffff;
+	font-size: 16px;
+	line-height: 1;
+	opacity: 1;
+}
+
+/* === minicart-subtotal-vacio.css ===
+   Precio del carrito en el header ("0,00 €"): sin control nativo de
+   Bricks para ocultarlo solo cuando el carrito está vacío (el ajuste
+   "Posición" del subtotal solo admite mostrar siempre u ocultar
+   siempre). El contador (.cart-count) sí alterna nativamente entre
+   las clases "hide"/"show" vía los fragments de WooCommerce al
+   añadir/quitar productos (ver woocommerce.php del tema padre) — nos
+   apoyamos en esa misma clase con :has() para ocultar el precio en
+   el mismo momento, sin JS ni MutationObserver: :has() reevalúa solo
+   cuando WooCommerce reemplaza el fragment con la nueva clase. */
+
+#brxe-v5t508 .mini-cart-link:has(.cart-count.hide) .cart-subtotal {
+	display: none;
+}
+
+/* === global-text-spacing.css ===
+   Espaciado entre párrafos consecutivos, en toda la web.
+   Bricks genera este selector desde su ajuste nativo "Contextual
+   spacing" (Theme Style), pero siempre usando margin-block-start, sin
+   ningún control nativo para cambiarlo a margin-block-end. Bricks
+   además repite esta misma regla en un bloque de estilos inline que
+   carga DESPUÉS de este archivo (orden que no podemos controlar), así
+   que con la misma especificidad gana siempre el suyo -> !important
+   es el escape legítimo aquí, no hay otra forma de ganar. */
+.brxe-text * + p,
+.brxe-post-content:not([data-source="bricks"]) * + p,
+body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommerce-account-form-edit-account *) {
+	margin-block-start: 0 !important;
+	margin-block-end: 1em !important;
+}
+
+/* Sangría de listas (ul/ol) dentro del texto de los acordeones de
+   producto (contenido libre desde ACF, no un elemento de lista nativo
+   de Bricks — sin control nativo para su sangría). El navegador aplica
+   40px fijos por defecto, un valor que no se reduce aunque el texto sí
+   lo haga en móvil, así que a partir de cierto punto la sangría se come
+   la mayor parte del ancho disponible. */
+@media (max-width: 767px) {
+	.brxw-product-accordion-01__text ul,
+	.brxw-product-accordion-01__text ol {
+		padding-left: 20px;
+	}
+}
+
+/* === hero-slider-height.css ===
+   Causa real del CLS de la home (Lighthouse: ~0,40 en móvil, atribuido
+   a la sección de categorías, pero el origen real es otro).
+
+   El deslizador del hero (Splide) fija su altura de 90vh con
+   JavaScript, como estilo en línea sobre el bloque de la diapositiva,
+   en cuanto arranca (ver "height" dentro del JSON de configuración
+   data-splide en el HTML — no existe como regla CSS en ningún sitio).
+   Hasta que ese script no termina de cargar y ejecutarse, el bloque no
+   tiene ninguna altura reservada, así que arranca con la altura mínima
+   de su contenido y salta de golpe a 90vh cuando el script la aplica —
+   eso empuja hacia abajo todo lo que viene después. No hay ningún
+   ajuste nativo en Bricks para que esa altura salga ya en el CSS en
+   vez de por JavaScript. Se fija aquí la misma altura por adelantado,
+   apuntando directamente al bloque por su ID (que sí existe desde el
+   primer HTML) en vez de a la clase ".splide__slide" (que Splide añade
+   más tarde y por tanto no sirve para evitar el salto). */
+@media (max-width: 767px) {
+	#brxe-745f4c {
+		height: 90vh;
+	}
+}

@@ -1,0 +1,29 @@
+/**
+ * [2026-09-12] Causa real del CLS de la home (Lighthouse: ~0,40 en móvil,
+ * atribuido a la sección de categorías, pero el origen real es otro).
+ *
+ * El deslizador del hero (Splide) fija su altura de 90vh con JavaScript,
+ * como estilo en línea sobre el bloque de la diapositiva, en cuanto
+ * arranca (ver "height" dentro del JSON de configuración data-splide en
+ * el HTML — no existe como regla CSS en ningún sitio). Hasta que ese
+ * script no termina de cargar y ejecutarse, el bloque no tiene ninguna
+ * altura reservada, así que arranca con la altura mínima de su
+ * contenido y salta de golpe a 90vh cuando el script la aplica — eso
+ * empuja hacia abajo todo lo que viene después (las cajas de
+ * categoría), y es lo que Lighthouse mide como el cambio de diseño.
+ *
+ * No hay ningún ajuste nativo en Bricks para que esa altura salga ya
+ * en el CSS en vez de por JavaScript (la opción "Altura" del
+ * deslizador se pasa siempre así). La solución es fijar aquí, con CSS
+ * normal, la misma altura por adelantado, apuntando directamente al
+ * bloque por su ID (que sí existe desde el primer HTML) en vez de a la
+ * clase ".splide__slide" (que Splide añade más tarde y por tanto no
+ * sirve para evitar el salto). El estilo en línea que añade Splide
+ * después coincide con este valor, así que no cambia nada visualmente
+ * — solo evita el salto.
+ */
+@media (max-width: 767px) {
+	#brxe-745f4c {
+		height: 90vh;
+	}
+}

@@ -64,6 +64,18 @@ add_action( 'wp_enqueue_scripts', function() {
 		true
 	);
 
+	// Causa real del CLS de la home (ver comentario dentro del archivo):
+	// la altura del deslizador del hero la fija Splide por JavaScript, no
+	// CSS. Solo hace falta en portada.
+	if ( is_front_page() ) {
+		wp_enqueue_style(
+			'hero-slider-height',
+			get_stylesheet_directory_uri() . '/css/hero-slider-height.css',
+			[ 'bricks-child' ],
+			filemtime( get_stylesheet_directory() . '/css/hero-slider-height.css' )
+		);
+	}
+
 	// Espaciado de párrafos consecutivos (en todas las páginas)
 	wp_enqueue_style(
 		'global-text-spacing',

@@ -269,6 +269,47 @@ add_action( 'wp_head', function () {
 	);
 }, 1 );
 
+/**
+ * [2026-09-12] Carga asíncrona de hojas de estilo que no afectan a nada
+ * visible por encima del pliegue en ninguna página (Lighthouse: "Solicitudes
+ * que bloquean el renderizado", 1300ms estimados). Sin ajuste nativo en
+ * Bricks/WooCommerce/el plugin de swatches para diferir su carga.
+ *
+ * Comprobado el contenido de cada archivo antes de tocarlo:
+ * - bricks-advanced-themer: no tiene ninguna regla activa (solo un
+ *   comentario), no puede causar parpadeo.
+ * - bricks-themify-icons: solo tipografía de iconos; el hueco del icono ya
+ *   tiene tamaño fijo por Bricks, así que no hay salto de layout aunque
+ *   tarden en pintarse los glifos.
+ * - Los 3 archivos de WooCommerce Product Variations Swatches: solo
+ *   estilizan el selector de variaciones dentro de una ficha de producto,
+ *   algo que no existe en la portada (las cajas de categoría no son fichas
+ *   de producto).
+ *
+ * Deliberadamente NO se toca frontend-layer (CSS base de Bricks, hace falta
+ * desde el primer pintado), woocommerce-layer (minicarrito, visible desde
+ * el arranque en el header) ni splide-layer (estilos del propio slider del
+ * hero) — diferir cualquiera de esos sí podría causar parpadeo o un nuevo
+ * salto de layout.
+ */
+add_filter( 'style_loader_tag', function ( $html, $handle ) {
+	$async_handles = [
+		'bricks-advanced-themer',
+		'bricks-themify-icons',
+		'vi-wpvs-frontend-style',
+		'vi-wpvs-frontend-loop-product-linkmore',
+		'vi-wpvs-frontend-loop-product-style',
+	];
+
+	if ( ! in_array( $handle, $async_handles, true ) ) {
+		return $html;
+	}
+
+	$async = str_replace( "media='all'", "media='print' onload=\"this.media='all'\"", $html );
+
+	return $async . '<noscript>' . $html . '</noscript>';
+}, 10, 2 );
+
 add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 'text' ) {
 	if ( $tag === 'measure' || $tag === '{measure}' ) {
 		return melopido_get_measure_from_title( $post->ID );

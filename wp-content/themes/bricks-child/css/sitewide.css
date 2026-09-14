@@ -24,9 +24,21 @@
    nombre en su propio <span class="mini-cart-item-name">, ya no hace
    falta ningún truco de grid/display:contents: la imagen y el botón
    de quitar se sacan del flujo con position:absolute, dejando el
-   nombre y el precio como bloques normales, uno debajo del otro. */
+   nombre y el precio como bloques normales, uno debajo del otro.
 
-#brxe-v5t508 .cart-detail li {
+   [2026-09-15] Se añade también #brxe-nr125n -el mismo elemento
+   "Mini carrito" de Bricks, pero la instancia de móvil (panel inferior
+   "Fuera del lienzo: Abajo")-. Hasta ahora nunca se había tocado y se
+   veía con el estilo por defecto de Bricks: filas altas (sin el
+   "min-height" ni el layout de imagen en absoluto de aquí), precio en
+   gris fino y sin el círculo terracota del botón de quitar. Mismo
+   HTML exacto (mini-cart.php ya envuelve el nombre igual en las dos
+   instancias), así que es la misma regla, solo que ahora apunta a los
+   dos IDs -es la manera de que ambas versiones (escritorio/móvil) se
+   vean exactamente igual, con coherencia de diseño-. */
+
+#brxe-v5t508 .cart-detail li,
+#brxe-nr125n .cart-detail li {
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -36,20 +48,23 @@
 	padding-inline-end: 34px;
 }
 
-#brxe-v5t508 .cart-detail li a:not(.remove) img {
+#brxe-v5t508 .cart-detail li a:not(.remove) img,
+#brxe-nr125n .cart-detail li a:not(.remove) img {
 	position: absolute;
 	left: 0;
 	top: 50%;
 	transform: translateY(-50%);
 }
 
-#brxe-v5t508 .cart-detail li .mini-cart-item-name {
+#brxe-v5t508 .cart-detail li .mini-cart-item-name,
+#brxe-nr125n .cart-detail li .mini-cart-item-name {
 	display: block;
 	font-size: var(--brxw-text-s);
 	line-height: 1.2;
 }
 
-#brxe-v5t508 .cart-detail li .quantity {
+#brxe-v5t508 .cart-detail li .quantity,
+#brxe-nr125n .cart-detail li .quantity {
 	display: block;
 	margin: 4px 0 0;
 	font-size: 18px;
@@ -57,7 +72,8 @@
 	color: var(--rosa-empolvado);
 }
 
-#brxe-v5t508 .cart-detail li .remove {
+#brxe-v5t508 .cart-detail li .remove,
+#brxe-nr125n .cart-detail li .remove {
 	position: absolute;
 	right: 0;
 	top: 50%;
@@ -73,6 +89,23 @@
 	font-size: 16px;
 	line-height: 1;
 	opacity: 1;
+}
+
+/* [2026-09-15] Los botones "Ver carrito"/"Finalizar compra" salen con
+   ancho distinto (cada uno según su propio texto) porque Bricks solo
+   deja estilar color/tipografía/borde de ambos juntos
+   (".woocommerce-mini-cart__buttons .button"), no un ancho igualado
+   -no hay control nativo para eso-. Sin ID: aplica a las dos
+   instancias (escritorio y móvil) igual, es el mismo contenedor de
+   botones en las dos. */
+.cart-detail .woocommerce-mini-cart__buttons {
+	display: flex;
+	gap: 8px;
+}
+
+.cart-detail .woocommerce-mini-cart__buttons .button {
+	flex: 1;
+	text-align: center;
 }
 
 /* === minicart-subtotal-vacio.css ===

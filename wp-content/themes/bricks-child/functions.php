@@ -205,6 +205,38 @@ add_filter( 'gettext', function ( $translated, $original, $domain ) {
 }, 10, 3 );
 
 /**
+ * [2026-09-14] Los botones de pago rápido de Stripe (Apple Pay/Google Pay/
+ * Amazon Pay/Link) salían arriba del todo en el checkout, antes de
+ * "Detalles de facturación" -es donde WooCommerce/Stripe los engancha por
+ * defecto, en el hook "woocommerce_checkout_before_customer_details"-,
+ * dejando un bloque suelto y un hueco visual grande antes de que empezara
+ * el contenido real de la página. Se mueven junto al resto de métodos de
+ * pago ("Opciones de pago"): se engancha el mismo callback del plugin
+ * (sin tocar su código, solo reordenando en qué hook se imprime) a
+ * "woocommerce_checkout_order_review", con prioridad 15 -entre el resumen
+ * del pedido (prioridad 10) y "Opciones de pago" (prioridad 20)-, así que
+ * quedan justo encima de esa sección en vez de sueltos arriba de todo.
+ */
+add_action( 'wp', function () {
+	if ( ! function_exists( 'is_checkout' ) || ! is_checkout() || is_order_received_page() ) {
+		return;
+	}
+
+	if ( ! class_exists( 'WC_Stripe_Express_Checkout_Element' ) ) {
+		return;
+	}
+
+	$express_checkout = WC_Stripe_Express_Checkout_Element::instance();
+
+	if ( ! $express_checkout ) {
+		return;
+	}
+
+	remove_action( 'woocommerce_checkout_before_customer_details', [ $express_checkout, 'display_express_checkout_button_html' ], 1 );
+	add_action( 'woocommerce_checkout_order_review', [ $express_checkout, 'display_express_checkout_button_html' ], 15 );
+} );
+
+/**
  * Register/enqueue custom scripts and styles
  */
 add_action( 'wp_enqueue_scripts', function() {

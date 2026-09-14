@@ -237,13 +237,29 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
    perdía contraste al ir suelto sobre cualquier fondo de la página) y
    "outline: none" porque WooCommerce enfoca el aviso por accesibilidad
    al aparecer, lo que añadía el anillo de foco azul por defecto del
-   navegador encima de nuestro diseño. */
+   navegador encima de nuestro diseño.
+
+   [2026-09-15] Se cambia el centrado de "left: 50% + transform:
+   translateX(-50%)" a "left: 0; right: 0; margin-inline: auto" -mismo
+   resultado visual, pero sin depender de "transform" para colocar el
+   elemento-. Motivo: usuario reportó en iPhone 17 (no en iPhone 13) que
+   el checkout "basculaba" lateralmente justo al cargar la página, en la
+   zona superior -donde vive este aviso, al ser "position: fixed"-.
+   Safari en iOS tiene bugs conocidos y de larga fecha con la combinación
+   "position: fixed" + "transform" justo durante la carga, antes de que
+   el viewport visual se estabilice; el "transform" que queda ahora
+   (solo en el eje Y, para la animación de entrada/salida) no participa
+   en el posicionamiento horizontal, así que ya no debería disparar ese
+   caso concreto. No se ha podido reproducir en local -sin acceso a un
+   iPhone real ni a un simulador con Xcode completo en esta máquina-,
+   así que queda pendiente de confirmar que se ha resuelto de verdad. */
 .woocommerce-message,
 .woocommerce-info {
 	position: fixed;
 	top: 24px;
-	left: 50%;
-	right: auto;
+	left: 0;
+	right: 0;
+	margin-inline: auto;
 	width: min(360px, calc(100% - 32px));
 	z-index: 9999;
 	background-color: var(--blanco);
@@ -253,7 +269,7 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
 	box-shadow: 0 8px 24px rgba(31, 31, 31, 0.18);
 	outline: none;
 	opacity: 0;
-	transform: translate(-50%, -12px);
+	transform: translateY(-12px);
 	transition: opacity 0.3s ease, transform 0.3s ease;
 	pointer-events: none;
 }
@@ -261,6 +277,69 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
 .woocommerce-message.melopido-toast-visible,
 .woocommerce-info.melopido-toast-visible {
 	opacity: 1;
-	transform: translate(-50%, 0);
+	transform: translateY(0);
 	pointer-events: auto;
+}
+
+/* === pago-movil.css ===
+   [2026-09-14] "Opciones de pago" en el checkout, vista móvil: el
+   Elemento de Pago de Stripe vive en un iframe aislado (por seguridad
+   PCI) que no podemos tocar con CSS del tema -así que esto no arregla
+   letras o colores dentro del iframe, solo el espacio que le dejamos-.
+   Antes de llegar a ese iframe, tres contenedores propios de
+   WooCommerce (#payment, .payment_box, #wc-stripe-upe-form) se comen
+   su propio relleno horizontal cada uno -sin control nativo en Bricks
+   para esto, es marcado que genera WooCommerce dentro del widget
+   "Resumen del Pedido", no elementos de Bricks-. En un móvil de 375px
+   el iframe se quedaba en ~211px de ancho real, y Stripe reparte su
+   propio contenido (el aviso "Proceso de compra seguro y rápido con
+   Link") en 3 líneas por falta de sitio. Se reduce el relleno
+   horizontal de esos dos contenedores solo en móvil para darle más
+   ancho real al iframe. */
+@media (max-width: 767px) {
+	.woocommerce-checkout #payment.woocommerce-checkout-payment {
+		padding: 16px 12px;
+	}
+
+	.woocommerce-checkout .payment_box.payment_method_stripe {
+		padding: 10px 8px;
+	}
+}
+
+/* === pago-metodos-agrupados.css ===
+   [2026-09-14] Los botones de pago rápido (Apple Pay/Google Pay/Amazon
+   Pay/Link, reenganchados más arriba en functions.php junto a "Opciones
+   de pago") y la caja de "Opciones de pago" en sí son dos cosas técnicas
+   distintas para WooCommerce/Stripe -un botón de acceso directo y la
+   lista de métodos de pago normal-, así que salen como dos bloques
+   sueltos, sin ninguna caja en común, aunque estén uno debajo del otro.
+   Visualmente parecen dos secciones separadas en vez de "los métodos de
+   pago", que es como se leen mejor juntos.
+
+   Sin control nativo en Bricks para esto -no son elementos de Bricks,
+   es marcado que imprime WooCommerce dentro del widget "Resumen del
+   Pedido"-. Se les pone el mismo borde que ya usa "#payment" (mismo
+   color, para que la línea de unión no se note) formando una sola
+   tarjeta continua: esquinas redondeadas arriba en el bloque de botones
+   rápidos, abajo en "Opciones de pago", y sin borde en el punto donde
+   se tocan. */
+#order_review #wc-stripe-express-checkout-element {
+	border: 1px solid #dde0e3;
+	border-bottom: none;
+	border-radius: 8px 8px 0 0;
+	padding: 16px 12px 0;
+	background-color: var(--blanco);
+}
+
+#order_review #wc-stripe-express-checkout-button-separator {
+	border-left: 1px solid #dde0e3;
+	border-right: 1px solid #dde0e3;
+	background-color: var(--blanco);
+	margin: 0;
+	padding: 8px 12px;
+}
+
+#order_review #payment.woocommerce-checkout-payment {
+	border-top: none;
+	border-radius: 0 0 8px 8px;
 }

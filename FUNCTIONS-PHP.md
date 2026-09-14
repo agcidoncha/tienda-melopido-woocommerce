@@ -4,6 +4,22 @@ Referencia rápida de todo lo que hay en `wp-content/themes/bricks-child/functio
 
 Convención: cada bloque nuevo añadido a partir de septiembre de 2026 lleva un comentario con fecha `[YYYY-MM-DD]` explicando el problema real, por qué la solución nativa no bastaba y qué hace el código. Sigue esa misma convención al añadir algo nuevo.
 
+Para los overrides de plantillas de WooCommerce (plantillas completas sobrescritas, no hooks de `functions.php`), ver [`WOOCOMMERCE-OVERRIDES.md`](WOOCOMMERCE-OVERRIDES.md) — documento aparte, mismo criterio.
+
+## Por qué esto no se pierde al actualizar
+
+`functions.php` vive en el **tema hijo** (`bricks-child`), nunca en el tema padre (Bricks). Son carpetas completamente separadas en el servidor:
+
+```
+wp-content/
+└── themes/
+    ├── bricks/                ← esto lo pisaría una actualización de Bricks (el tema padre)
+    └── bricks-child/          ← ESTO es donde está todo lo nuestro, nadie lo actualiza automáticamente
+        └── functions.php
+```
+
+Una actualización del tema padre no toca `bricks-child/` — es una carpeta aparte por diseño, así que nada de aquí se pierde.
+
 ## Rendimiento
 
 | Qué | Línea | Resumen |
@@ -40,6 +56,8 @@ Convención: cada bloque nuevo añadido a partir de septiembre de 2026 lleva un 
 | `{measure}` / `{measure_link}` | [`functions.php:304`](wp-content/themes/bricks-child/functions.php#L304), lógica en `melopido_get_measure_from_title()` / `melopido_render_measure_link()` | Extrae la medida del título del producto (sin el prefijo "Funda de Seda") para la fila "Otras medidas" — las 6 tallas siempre en 2×3, la actual como texto sin enlace. |
 | `{random_hero_video}` / `{random_hero_video_poster}` | [`functions.php:304`](wp-content/themes/bricks-child/functions.php#L304), lógica en `melopido_get_random_hero_media()` | Elige al azar, en cada carga, un vídeo de `/video/hero-*.mp4` (+ su póster a juego). Añadir un vídeo nuevo es solo subir el `.mp4` + `.jpg` con el mismo nombre — no hace falta tocar código. Resuelto en PHP (no JS) para que el HTML llegue ya con la URL correcta. |
 
+*(Los overrides de plantilla de WooCommerce —archivos completos sobrescritos, no hooks de este archivo— están en [`WOOCOMMERCE-OVERRIDES.md`](WOOCOMMERCE-OVERRIDES.md), no aquí.)*
+
 ## Boilerplate de Bricks (sin usar / sin tocar)
 
 Líneas 512–656: scaffold que trae Bricks por defecto al crear el tema hijo (registro de elemento custom `title.php`, lista de elementos para el builder —el filtro que la aplica está comentado, así que no tiene efecto—, mensajes de guardado personalizados, ejemplos comentados de fuentes/mapas). No se ha tocado ni se usa activamente; se deja documentado aquí para no confundirlo con una personalización real la próxima vez que se revise el archivo.
@@ -47,3 +65,5 @@ Líneas 512–656: scaffold que trae Bricks por defecto al crear el tema hijo (r
 ---
 
 **Al añadir algo nuevo a `functions.php`**: escribe el comentario explicativo ahí mismo (fecha + problema + por qué no bastaba lo nativo), y añade una fila a la tabla que corresponda en este documento.
+
+**Al crear un override de plantilla de WooCommerce nuevo**: eso va en [`WOOCOMMERCE-OVERRIDES.md`](WOOCOMMERCE-OVERRIDES.md), no aquí.

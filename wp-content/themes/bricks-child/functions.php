@@ -233,6 +233,17 @@ add_action( 'wp_enqueue_scripts', function() {
 		true
 	);
 
+	// Avisos de WooCommerce como tarjeta flotante (ver comentario dentro
+	// del archivo): en todas las páginas, porque esos avisos pueden salir
+	// en cualquier sitio (carrito, checkout, Mi cuenta...), no solo aquí.
+	wp_enqueue_script(
+		'avisos-toast',
+		get_stylesheet_directory_uri() . '/js/avisos-toast.js',
+		[],
+		filemtime( get_stylesheet_directory() . '/js/avisos-toast.js' ),
+		true
+	);
+
 	// Estilos y script del selector de color de variaciones (solo en página de producto individual)
 	if ( function_exists( 'is_product' ) && is_product() ) {
 		wp_enqueue_style(
@@ -309,6 +320,20 @@ add_action( 'wp_enqueue_scripts', function() {
 			get_stylesheet_directory_uri() . '/js/confirmacion-carrito.js',
 			[ 'jquery', 'wc-add-to-cart' ],
 			filemtime( get_stylesheet_directory() . '/js/confirmacion-carrito.js' ),
+			true
+		);
+	}
+
+	// Actualización automática del carrito al cambiar la cantidad (ver
+	// comentario dentro del archivo): solo tiene sentido en la propia
+	// página del carrito, es la única que tiene el formulario y el botón
+	// "Actualizar carrito" a los que se engancha.
+	if ( function_exists( 'is_cart' ) && is_cart() ) {
+		wp_enqueue_script(
+			'actualizar-carrito-automatico',
+			get_stylesheet_directory_uri() . '/js/actualizar-carrito-automatico.js',
+			[],
+			filemtime( get_stylesheet_directory() . '/js/actualizar-carrito-automatico.js' ),
 			true
 		);
 	}

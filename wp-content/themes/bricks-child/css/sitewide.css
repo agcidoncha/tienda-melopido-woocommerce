@@ -178,3 +178,89 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
 	font-size: 18px;
 	line-height: 1;
 }
+
+/* === avisos-woocommerce.css ===
+   [2026-09-14] Los avisos de WooCommerce ("añadido al carrito",
+   "carrito actualizado", cupón aplicado/inválido, errores de
+   formulario...) salen con los colores genéricos del plugin
+   (verde/azul de éxito, rojo de error), que no tienen nada que ver con
+   la paleta de la marca.
+
+   Hay un control nativo de Bricks para esto en el elemento "Aviso" de
+   WooCommerce, pero solo por instancia -habría que repetirlo en cada
+   plantilla que use ese elemento (carrito, checkout, cuenta...)-.
+   Las clases base de WooCommerce (.woocommerce-message/-info/-error)
+   son las mismas en TODA la web, así que un único bloque aquí cubre
+   cualquier aviso, en cualquier página, sin ir plantilla por
+   plantilla. */
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error {
+	background-color: var(--beige-secundario);
+	border: 1px solid var(--beige-borde);
+	border-left: 4px solid var(--terracota);
+	border-radius: 8px;
+	color: var(--texto-principal);
+	padding: 16px 20px;
+}
+
+.woocommerce-error {
+	border-left-color: var(--negro-casi-puro);
+}
+
+.woocommerce-message a.button,
+.woocommerce-info a.button,
+.woocommerce-error a.button {
+	background-color: var(--terracota);
+	color: var(--blanco);
+	border-radius: 4px;
+}
+
+/* === aviso-toast.css ===
+   [2026-09-14] Ver comentario en js/avisos-toast.js: mismo cambio, la
+   mitad que le toca al CSS. Solo avisos de éxito/información -no de
+   error, esos se quedan en su sitio-, centrado arriba de la pantalla
+   para no empujar el contenido de la página. La transición de
+   entrada/salida la controla la clase "melopido-toast-visible" que
+   añade el JS -así el aviso se queda visible el tiempo que decide el
+   JS (con el AJAX de por medio), no un tiempo fijo solo por CSS
+   (@keyframes a ciegas).
+
+   [2026-09-14] Corrección: WooCommerce fija "width: 100%" en estos
+   avisos (pensado para su formato de banner original) y, en un
+   elemento "position: fixed", ese 100% se calcula sobre todo el ancho
+   de la pantalla -no sobre el hueco libre entre "left" y "right"-, así
+   que el aviso se salía por el borde derecho en vez de quedar
+   centrado. Se fija aquí un ancho explícito (con tope de 360px) y se
+   centra con "left: 50%" + "transform: translateX(-50%)" en vez de
+   "left/right" fijos. Fondo blanco y texto negro (antes beige/gris,
+   perdía contraste al ir suelto sobre cualquier fondo de la página) y
+   "outline: none" porque WooCommerce enfoca el aviso por accesibilidad
+   al aparecer, lo que añadía el anillo de foco azul por defecto del
+   navegador encima de nuestro diseño. */
+.woocommerce-message,
+.woocommerce-info {
+	position: fixed;
+	top: 24px;
+	left: 50%;
+	right: auto;
+	width: min(360px, calc(100% - 32px));
+	z-index: 9999;
+	background-color: var(--blanco);
+	color: var(--negro-casi-puro);
+	font-weight: 700;
+	text-align: center;
+	box-shadow: 0 8px 24px rgba(31, 31, 31, 0.18);
+	outline: none;
+	opacity: 0;
+	transform: translate(-50%, -12px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	pointer-events: none;
+}
+
+.woocommerce-message.melopido-toast-visible,
+.woocommerce-info.melopido-toast-visible {
+	opacity: 1;
+	transform: translate(-50%, 0);
+	pointer-events: auto;
+}

@@ -141,3 +141,40 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
 		height: 90vh;
 	}
 }
+
+/* === espaciado-carrito-movil.css ===
+   [2026-09-14] Tabla de productos del carrito, vista responsive de
+   móvil (cada celda pasa a fila propia con su etiqueta antes del
+   valor: "Precio:", "Cantidad:", etc.). Sin control nativo en el
+   elemento "Artículos del carrito" de Bricks para el relleno vertical
+   de esas celdas — el valor por defecto (15px arriba y abajo, en cada
+   una) hace que la tarjeta de un solo producto sea mucho más alta de
+   lo necesario, obligando a más scroll para ver varios artículos.
+   Solo en móvil; en escritorio la tabla normal no tiene este problema. */
+@media (max-width: 767px) {
+	.woocommerce-cart-form td {
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
+}
+
+/* === circulo-eliminar-carrito.css ===
+   [2026-09-14] Botón "×" para quitar un producto en la página del
+   carrito: el elemento "Artículos del carrito" de Bricks solo tiene
+   controles nativos para color, tamaño y posición de ese enlace, no
+   para un fondo/forma detrás -así que una "×" suelta es poco visible y
+   parece poco tocable en móvil. Mismo círculo que ya usamos para el
+   botón de quitar del minicarrito (ver "=== minicart.css ===" arriba),
+   por consistencia visual entre los dos sitios. */
+.woocommerce-cart-form .product-remove a.remove {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background-color: var(--terracota);
+	color: #ffffff;
+	font-size: 18px;
+	line-height: 1;
+}

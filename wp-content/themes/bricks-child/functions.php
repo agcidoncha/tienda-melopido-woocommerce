@@ -187,6 +187,24 @@ add_filter( 'gettext', function ( $translated, $original, $domain ) {
 }, 10, 3 );
 
 /**
+ * [2026-09-14] La columna/etiqueta "Subtotal" de cada línea de producto en
+ * el carrito y el checkout (precio × cantidad de esa línea) se renombra a
+ * "Importe". "Subtotal" da a entender que después se suma algo más (el
+ * IVA, normalmente), pero esta tienda no tiene impuestos activados, así
+ * que el nombre confunde. Solo en carrito/checkout -is_cart()/
+ * is_checkout()-, para no tocar el mismo texto en Mi cuenta, el admin o
+ * los emails de pedido, donde "Subtotal" sí es un término estándar
+ * esperado.
+ */
+add_filter( 'gettext', function ( $translated, $original, $domain ) {
+	if ( 'woocommerce' === $domain && 'Subtotal' === $original && ( is_cart() || is_checkout() ) ) {
+		return 'Importe';
+	}
+
+	return $translated;
+}, 10, 3 );
+
+/**
  * Register/enqueue custom scripts and styles
  */
 add_action( 'wp_enqueue_scripts', function() {

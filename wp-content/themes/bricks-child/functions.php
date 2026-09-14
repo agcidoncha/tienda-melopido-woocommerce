@@ -14,6 +14,49 @@
 add_filter( 'wc_stripe_load_scripts_on_product_page_when_prbs_disabled', '__return_false' );
 
 /**
+ * [2026-09-14] El aviso "X añadido al carrito" de WooCommerce incluye
+ * siempre un botón "Ver carrito", sin comprobar si el usuario ya está en
+ * esa página. En este sitio el flujo típico es: añadir desde la ficha de
+ * producto -> la propia web redirige a /carrito/ -> ahí se ve el aviso, con
+ * un botón para ir a... donde ya estás.
+ *
+ * No basta con filtrar "wc_add_to_cart_message_html" (primer intento) ni
+ * con mirar is_cart()/la URL de referencia (segundo intento): WooCommerce
+ * genera y guarda el mensaje completo -botón incluido- en la sesión en el
+ * momento de añadir el producto, en la ficha del producto, ANTES de que el
+ * navegador redirija al carrito. En ese instante no hay forma de saber
+ * dónde va a acabar la página. Así que se deja que WooCommerce guarde el
+ * mensaje tal cual, y se corrige justo antes de imprimirlo -en
+ * template_redirect, cuando is_cart() ya refleja la página real que se va
+ * a servir- editando directamente el aviso ya guardado en la sesión.
+ */
+add_action( 'template_redirect', function () {
+	if ( ! is_cart() || ! WC()->session ) {
+		return;
+	}
+
+	$notices = WC()->session->get( 'wc_notices', array() );
+
+	if ( empty( $notices['success'] ) ) {
+		return;
+	}
+
+	foreach ( $notices['success'] as &$notice ) {
+		$text = isset( $notice['notice'] ) ? $notice['notice'] : $notice;
+		$text = preg_replace( '/<a\s[^>]*class="[^"]*\bwc-forward\b[^"]*"[^>]*>.*?<\/a>\s*/is', '', $text );
+
+		if ( isset( $notice['notice'] ) ) {
+			$notice['notice'] = $text;
+		} else {
+			$notice = $text;
+		}
+	}
+	unset( $notice );
+
+	WC()->session->set( 'wc_notices', $notices );
+}, 5 );
+
+/**
  * [2026-09-12] WooCommerce fija "loading=lazy" a mano en el HTML de TODAS las
  * imágenes de la galería del producto (wc_get_gallery_image_html(), incluida
  * la principal), sin pasar por el mecanismo de conteo de WordPress que ese

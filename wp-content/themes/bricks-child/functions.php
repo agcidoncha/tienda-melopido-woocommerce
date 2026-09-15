@@ -205,6 +205,24 @@ add_filter( 'gettext', function ( $translated, $original, $domain ) {
 }, 10, 3 );
 
 /**
+ * [2026-09-15] Misma fila "Subtotal" redundante que ya se quitó de
+ * cart-totals.php/review-order.php (sin impuestos activados, subtotal y
+ * total son siempre el mismo número), pero en la tabla "Detalles del
+ * pedido" -página de Gracias y Mi cuenta > Ver pedido-, que usa una
+ * plantilla distinta (order/order-details.php) con un mecanismo distinto:
+ * no imprime filas sueltas, las arma todas a partir de
+ * WC_Order::get_order_item_totals(). Ese método sí expone un filtro
+ * nativo para el array completo, así que no hace falta sobrescribir
+ * ninguna plantilla -a diferencia del carrito/checkout-: basta con quitar
+ * la clave "cart_subtotal" del resultado.
+ */
+add_filter( 'woocommerce_get_order_item_totals', function ( $total_rows ) {
+	unset( $total_rows['cart_subtotal'] );
+
+	return $total_rows;
+} );
+
+/**
  * [2026-09-14] Los botones de pago rápido de Stripe (Apple Pay/Google Pay/
  * Amazon Pay/Link) salían arriba del todo en el checkout, antes de
  * "Detalles de facturación" -es donde WooCommerce/Stripe los engancha por

@@ -2,6 +2,10 @@
 
 Proyecto para gestionar la tienda **seda.melopido.shop** (WordPress + WooCommerce + Bricks Builder) mediante instrucciones en lenguaje natural mediante Claude Code.
 
+## Reglas de seguridad para trabajar con IA
+
+Antes de nada, ten presentes las 6 reglas de [`reglas-seguridad-trabajo-con-ia.md`](reglas-seguridad-trabajo-con-ia.md) (Jurassic Park, Termópilas, Caballo de Troya, Gallipoli, Abogado del Diablo, Tiburón/Jaws) — se aplican a todo el trabajo en este proyecto, no solo a Bricks.
+
 ## Stack de la tienda
 
 - WordPress 7.0.2, WooCommerce 10.9.4, PHP 8.3.31, MySQL/MariaDB 11.4.12

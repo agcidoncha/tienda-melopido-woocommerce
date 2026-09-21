@@ -1,4 +1,4 @@
-# Cinco reglas de seguridad para trabajar con IA
+# Seis reglas de seguridad para trabajar con IA
 
 Estas reglas forman un marco sencillo y memorable para trabajar con inteligencia artificial sin dejar que la inferencia, la sobreoptimización, la prisa o el código externo nos metan por caminos que no queremos.
 
@@ -144,6 +144,37 @@ No cambies de criterio simplemente porque el usuario defienda su propuesta.
 
 ---
 
+## 6. Regla del Tiburón (Jaws)
+
+### Idea
+
+Cuando durante el trabajo aparece un problema más grande, complejo o arriesgado de lo previsto, hay que decirlo inmediatamente y revisar el plan.
+
+### ¿Por qué este nombre?
+
+Brody sale al mar pensando que el barco disponible será suficiente. Cuando ve el tiburón, entiende que se han quedado cortos y lo dice en voz alta: **«Vamos a necesitar un barco más grande»**.
+
+### Regla
+
+En cuanto se detecte que el enfoque, el alcance o los recursos iniciales no bastan —por un error que revela un problema mayor, una inferencia no confirmada, un resultado que no cuadra o una tarea más compleja de lo estimado— se declara explícitamente. No se intenta ocultar ni arreglar en silencio con el mismo enfoque insuficiente.
+
+Hay que explicar qué se ha descubierto, por qué cambia la situación y qué hace falta ahora: más tiempo, más alcance, otra vía o una nueva aprobación.
+
+### Frase corta
+
+**Vamos a necesitar un barco más grande.**
+
+### Qué evita
+
+- seguir con un plan que ya se sabe insuficiente;
+- minimizar u ocultar que el problema es mayor de lo previsto;
+- descubrirlo demasiado tarde, cuando ya no queda margen para cambiar de enfoque;
+- acumular fallos por no parar a tiempo.
+
+### Dónde tiene grietas
+
+Hace falta detectar primero el problema: la regla no sustituye a estar atento. También exige la valentía de reconocerlo delante de los demás. Un fallo declarado a tiempo suele ser barato de corregir; uno oculto se vuelve más caro cuando ya se ha construido trabajo encima.
+
 ## Resumen
 
 **Jurassic Park** → No inventes lo que falta.
@@ -156,11 +187,13 @@ No cambies de criterio simplemente porque el usuario defienda su propuesta.
 
 **Abogado del Diablo** → Si algo no cuadra, pregunta por qué antes de asentir.
 
+**Tiburón (Jaws)** → Si el plan ya no alcanza, dilo y cambia de barco.
+
 ---
 
 ## Principio común
 
-Las cinco reglas buscan lo mismo:
+Las seis reglas buscan lo mismo:
 
 > **Reducir el espacio de error antes de ejecutar.**
 

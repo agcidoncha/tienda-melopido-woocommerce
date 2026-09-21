@@ -187,6 +187,21 @@ add_filter( 'gettext', function ( $translated, $original, $domain ) {
 }, 10, 3 );
 
 /**
+ * [2026-09-17] El aviso del cupón en el checkout ("If you have a coupon
+ * code, please apply it below.") sale en inglés pese a que el resto del
+ * núcleo de WooCommerce está en español en este sitio — cadena concreta sin
+ * traducir en el paquete de idioma instalado. Se sobrescribe con "gettext"
+ * en vez de esperar a que llegue una traducción oficial.
+ */
+add_filter( 'gettext', function ( $translated, $original, $domain ) {
+	if ( 'woocommerce' === $domain && 'If you have a coupon code, please apply it below.' === $original ) {
+		return 'Si tienes un código de cupón, aplícalo aquí abajo.';
+	}
+
+	return $translated;
+}, 10, 3 );
+
+/**
  * [2026-09-14] La columna/etiqueta "Subtotal" de cada línea de producto en
  * el carrito y el checkout (precio × cantidad de esa línea) se renombra a
  * "Importe". "Subtotal" da a entender que después se suma algo más (el
@@ -374,6 +389,18 @@ add_action( 'wp_enqueue_scripts', function() {
 		);
 	}
 
+	// Estilo del recibo/pago de pedido pendiente (ver comentario dentro
+	// del archivo): solo tiene sentido cuando se está pagando un pedido
+	// existente, no en el checkout normal.
+	if ( function_exists( 'is_wc_endpoint_url' ) && is_wc_endpoint_url( 'order-pay' ) ) {
+		wp_enqueue_style(
+			'recibo-pedido',
+			get_stylesheet_directory_uri() . '/css/recibo-pedido.css',
+			[ 'bricks-child' ],
+			filemtime( get_stylesheet_directory() . '/css/recibo-pedido.css' )
+		);
+	}
+
 	// Actualización automática del carrito al cambiar la cantidad (ver
 	// comentario dentro del archivo): solo tiene sentido en la propia
 	// página del carrito, es la única que tiene el formulario y el botón
@@ -413,6 +440,11 @@ add_filter( 'bricks/dynamic_tags_list', function( $tags ) {
 	$tags[] = [
 		'name'  => '{random_hero_video_poster}',
 		'label' => 'Póster del vídeo aleatorio del hero (mismo archivo elegido, en .jpg)',
+		'group' => 'Custom',
+	];
+	$tags[] = [
+		'name'  => '{search_query}',
+		'label' => 'Término buscado (página de resultados de búsqueda)',
 		'group' => 'Custom',
 	];
 
@@ -576,6 +608,10 @@ add_filter( 'bricks/dynamic_data/render_tag', function( $tag, $post, $context = 
 		return melopido_get_random_hero_video_poster();
 	}
 
+	if ( $tag === 'search_query' || $tag === '{search_query}' ) {
+		return get_search_query();
+	}
+
 	return $tag;
 }, 10, 3 );
 
@@ -594,6 +630,10 @@ add_filter( 'bricks/dynamic_data/render_content', function( $content, $post, $co
 
 	if ( strpos( $content, '{random_hero_video_poster}' ) !== false ) {
 		$content = str_replace( '{random_hero_video_poster}', melopido_get_random_hero_video_poster(), $content );
+	}
+
+	if ( strpos( $content, '{search_query}' ) !== false ) {
+		$content = str_replace( '{search_query}', get_search_query(), $content );
 	}
 
 	return $content;

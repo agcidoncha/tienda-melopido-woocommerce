@@ -3,11 +3,11 @@
    pero sin enlace (ver {measure_link} en functions.php) y con estilo
    apagado para que quede claro que no es clicable. */
 .item-otra-medida:has(.medida-actual-deshabilitada) {
-	background: #F4EFE8 !important;
-	border-color: #DDD8D2 !important;
+	background: var(--beige-secundario) !important;
+	border-color: var(--beige-borde-apagado) !important;
 	cursor: default !important;
 }
 
 .medida-actual-deshabilitada {
-	color: #9C9690;
+	color: var(--texto-apagado);
 }

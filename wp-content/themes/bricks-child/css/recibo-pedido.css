@@ -19,9 +19,6 @@
 	margin: 24px auto;
 	padding: 24px;
 	background-color: var(--blanco);
-	border: 1px solid var(--beige-borde);
-	border-radius: 16px;
-	box-shadow: 0 2px 12px rgba(31, 31, 31, 0.06);
 	overflow-x: hidden;
 }
 
@@ -44,7 +41,7 @@
 	.woocommerce-message,
 	.woocommerce-info,
 	.woocommerce-error {
-		margin: 12px;
+		margin: 12px 0;
 	}
 }
 
@@ -60,11 +57,20 @@
 	max-width: 100%;
 	table-layout: fixed;
 	border-collapse: collapse;
-	margin-bottom: 24px;
+	margin-bottom: 0;
 }
 
 .melopido-recibo-pedido .shop_table .product-name {
 	overflow-wrap: break-word;
+	width: 52%;
+}
+
+.melopido-recibo-pedido .shop_table .product-quantity {
+	width: 10%;
+}
+
+.melopido-recibo-pedido .shop_table .product-total {
+	width: 38%;
 }
 
 .melopido-recibo-pedido .shop_table th,
@@ -96,11 +102,51 @@
 	color: var(--negro-casi-puro);
 }
 
+/* [2026-09-17] "Método de pago" ya no vive dentro de la tabla (ver
+   checkout/form-pay.php): su valor ("Tarjeta de Crédito / Débito") es
+   mucho más largo que un precio y, al ser la única fila con colspan,
+   quedaba encajado en una columna estrecha, partiéndose en 3 líneas con
+   hueco vacío al lado — probado en vivo que no hay forma fiable de que
+   una celda con colspan ocupe todo el ancho vía CSS (display:block no
+   hereda el ancho completo de la tabla por las cajas anónimas del
+   modelo de tabla). Como párrafo normal a todo el ancho de la tarjeta,
+   se resuelve sin trucos de CSS. */
+.melopido-recibo-pedido .metodo-pago {
+	margin: 8px 0 0;
+	padding-top: 0;
+	border-top: none;
+	font-weight: 600;
+	color: var(--negro-casi-puro);
+}
+
+.melopido-recibo-pedido .metodo-pago strong {
+	font-weight: 600;
+}
+
+.melopido-recibo-pedido .shop_table tfoot tr:last-child th {
+	padding-top: 8px;
+	padding-bottom: 0;
+}
+
 .melopido-recibo-pedido #payment {
-	border: 1px solid var(--beige-borde);
-	border-radius: 8px;
 	padding: 16px;
-	background-color: var(--crema-principal);
+	background-color: var(--blanco);
+}
+
+.melopido-recibo-pedido .payment_box.payment_method_stripe {
+	background-color: var(--blanco);
+	margin: 0;
+	padding: 8px 0 0;
+}
+
+.melopido-recibo-pedido .wc_payment_method {
+	margin: 0;
+}
+
+.melopido-recibo-pedido #payment fieldset {
+	border: none;
+	padding: 0;
+	margin: 0;
 }
 
 .melopido-recibo-pedido #payment .form-row {
@@ -113,11 +159,21 @@
 
 @media (max-width: 767px) {
 	.melopido-recibo-pedido {
-		margin: 12px;
+		margin: 12px 0;
 		padding: 16px;
 	}
 
 	.melopido-recibo-pedido #payment {
-		padding: 12px 8px;
+		padding: 12px 0;
+	}
+
+	#order_review #wc-stripe-express-checkout-element {
+		border: none;
+		padding: 16px 0 0;
+	}
+
+	#order_review #wc-stripe-express-checkout-button-separator {
+		border: none;
+		padding: 8px 0;
 	}
 }

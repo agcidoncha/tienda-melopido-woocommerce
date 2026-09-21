@@ -2,7 +2,7 @@
 
 Referencia de la identidad visual, extraída del CSS real de la web pública **melopido.shop** (la tienda ya publicada, fuente de verdad del diseño) y aplicada como estándar en **seda.melopido.shop** (Bricks).
 
-Última actualización: 2026-08-13.
+Última actualización: 2026-09-17.
 
 ## Tipografía
 
@@ -33,6 +33,7 @@ Paleta de marca nativa de Bricks: **"Melopido"** (id `4f1861`), creada vía `bri
 | Blanco | `--blanco` | `#FFFFFF` | Fondos de bloques, tarjetas destacadas |
 | Blanco hueso | `--blanco-hueso` | `#FDFCFA` | Fondo de variaciones de producto, botón inactivo del quiz de color |
 | Beige borde | `--beige-borde` | `#D8D2CB` | Bordes de campos (ej. selector de cantidad) |
+| Beige borde apagado | `--beige-borde-apagado` | `#DDD8D2` | Borde del item "medida actual" deshabilitado en la fila "Otras medidas" (producto) |
 
 ### Texto
 
@@ -40,6 +41,7 @@ Paleta de marca nativa de Bricks: **"Melopido"** (id `4f1861`), creada vía `bri
 |---|---|---|---|
 | Texto principal | `--texto-principal` | `#66605C` | Cuerpo de texto |
 | Texto secundario | `--texto-secundario` | `#7A736D` | Texto atenuado, descripciones cortas |
+| Texto apagado | `--texto-apagado` | `#9C9690` | Texto del item "medida actual" deshabilitado en la fila "Otras medidas" (producto) |
 | Gris medio | `--gris-medio` | `#616161` | Etiquetas de formulario (Mi cuenta → editar dirección) |
 | Negro casi puro | `--negro-casi-puro` | `#1F1F1F` | Títulos con máximo contraste si hace falta |
 | Blanco cálido | `--blanco-calido` | `#FFFAF7` | Texto sobre fotos/fondos oscuros (hero) |
@@ -52,7 +54,7 @@ Paleta de marca nativa de Bricks: **"Melopido"** (id `4f1861`), creada vía `bri
 | Terracota (variante/hover) | `--terracota` | `#AC6764` | Estado hover o variante del rosa |
 | Naranja Amazon | `--naranja-amazon` | `#F39200` | Botón "Comprar en Amazon" — diferenciado del CTA propio |
 
-13 colores en total. Los 3 marcados arriba (blanco hueso, gris medio, beige borde) se añadieron el 2026-08-13 al detectar hex sueltos en clases globales existentes (`brxw-woo-add-to-cart`, `toggle-boton-activo/inactivo`, `brxw-woo-account-edit-address-01`) que no tenían variable asignada.
+15 colores en total. Los 3 marcados arriba (blanco hueso, gris medio, beige borde) se añadieron el 2026-08-13 al detectar hex sueltos en clases globales existentes (`brxw-woo-add-to-cart`, `toggle-boton-activo/inactivo`, `brxw-woo-account-edit-address-01`) que no tenían variable asignada. Beige borde apagado y texto apagado se añadieron el 2026-09-17 en una auditoría de hex sueltos en los CSS del tema hijo (`quiz-color.css`, `selector-color-carrito.css`, `medida-selector.css`) — la mayoría coincidían exactamente con colores ya existentes y se sustituyeron por su `var()`, pero estos dos no coincidían con ningún color de la paleta.
 
 ## Cómo cambiar esto desde el propio editor de Bricks
 

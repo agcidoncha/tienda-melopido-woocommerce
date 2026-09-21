@@ -45,7 +45,7 @@
 	justify-content: center;
 	min-height: 100px;
 	padding-inline-start: 112px;
-	padding-inline-end: 34px;
+	padding-inline-end: 50px;
 }
 
 #brxe-v5t508 .cart-detail li a:not(.remove) img,
@@ -72,23 +72,63 @@
 	color: var(--rosa-empolvado);
 }
 
+/* [2026-09-18] El botón de quitar producto (círculo terracota, arriba a
+   la derecha de la fila) se confundía con un botón de "cerrar" el
+   minicarrito -misma posición y forma que un aspa de cerrar un modal-,
+   así que la gente lo tocaba pensando que iba a cerrar el panel y en
+   realidad borraba el producto. Se cambia el "×" por un icono de
+   papelera (más reconocible como "eliminar") y se añade la palabra
+   "Eliminar" debajo, en texto pequeño, para que la acción quede
+   inequívoca. El texto "×" original se oculta (font-size:0) en vez de
+   borrarse del marcado -sigue siendo el enlace real de WooCommerce,
+   solo cambia su aspecto-. */
 #brxe-v5t508 .cart-detail li .remove,
 #brxe-nr125n .cart-detail li .remove {
 	position: absolute;
-	right: 0;
+	right: 10px;
 	top: 50%;
 	transform: translateY(-50%);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 25px;
-	height: 25px;
+	width: 30px;
+	height: 30px;
 	border-radius: 50%;
 	background-color: var(--terracota);
-	color: var(--blanco);
-	font-size: 16px;
+	color: transparent;
+	font-size: 0;
 	line-height: 1;
 	opacity: 1;
+}
+
+#brxe-v5t508 .cart-detail li .remove::before,
+#brxe-nr125n .cart-detail li .remove::before {
+	content: "";
+	width: 20px;
+	height: 20px;
+	background-color: var(--blanco);
+	-webkit-mask-image: url("https://seda.melopido.shop/wp-content/uploads/2026/09/trash.svg");
+	mask-image: url("https://seda.melopido.shop/wp-content/uploads/2026/09/trash.svg");
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+}
+
+#brxe-v5t508 .cart-detail li .remove::after,
+#brxe-nr125n .cart-detail li .remove::after {
+	content: "Eliminar";
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	transform: translateX(-50%);
+	margin-top: 4px;
+	font-size: 10px;
+	font-weight: 400;
+	color: var(--texto-secundario);
+	white-space: nowrap;
 }
 
 /* [2026-09-15] Los botones "Ver carrito"/"Finalizar compra" salen con
@@ -117,9 +157,20 @@
    añadir/quitar productos (ver woocommerce.php del tema padre) — nos
    apoyamos en esa misma clase con :has() para ocultar el precio en
    el mismo momento, sin JS ni MutationObserver: :has() reevalúa solo
-   cuando WooCommerce reemplaza el fragment con la nueva clase. */
+   cuando WooCommerce reemplaza el fragment con la nueva clase.
 
-#brxe-v5t508 .mini-cart-link:has(.cart-count.hide) .cart-subtotal {
+   [2026-09-15] CORRECCIÓN: la regla solo apuntaba a "#brxe-v5t508" -la
+   instancia de escritorio del elemento "Mini carrito"-, así que
+   funcionaba ahí, pero la instancia de móvil ("#brxe-nr125n", el panel
+   inferior) nunca la llevó -detectado por el usuario en un iPhone
+   real: "0,00 €" seguía visible con el carrito vacío-. Mismo caso que
+   ya se documentó arriba en "=== minicart.css ===" para el layout de
+   filas: cuando se añadió soporte para la instancia móvil solo se
+   actualizó ese bloque, no este. Se añade el mismo selector para las
+   dos instancias, igual que el resto de reglas de este minicarrito. */
+
+#brxe-v5t508 .mini-cart-link:has(.cart-count.hide) .cart-subtotal,
+#brxe-nr125n .mini-cart-link:has(.cart-count.hide) .cart-subtotal {
 	display: none;
 }
 
@@ -198,18 +249,60 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
    para un fondo/forma detrás -así que una "×" suelta es poco visible y
    parece poco tocable en móvil. Mismo círculo que ya usamos para el
    botón de quitar del minicarrito (ver "=== minicart.css ===" arriba),
-   por consistencia visual entre los dos sitios. */
+   por consistencia visual entre los dos sitios.
+
+   [2026-09-18] Mismo cambio que en el minicarrito: el "×" en la esquina
+   de la tarjeta se confundía con un botón de "cerrar" (misma posición y
+   forma que el aspa de cerrar un modal), y la gente lo tocaba pensando
+   que cerraba algo cuando en realidad borraba el producto. Se sustituye
+   por el icono de papelera + la palabra "Eliminar" debajo, igual que en
+   el minicarrito, para que la acción quede inequívoca en toda la
+   tienda. */
+.woocommerce-cart-form .product-remove {
+	position: relative;
+	padding-bottom: 22px;
+}
+
 .woocommerce-cart-form .product-remove a.remove {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 28px;
-	height: 28px;
+	width: 30px;
+	height: 30px;
 	border-radius: 50%;
 	background-color: var(--terracota);
-	color: var(--blanco);
-	font-size: 18px;
+	color: transparent;
+	font-size: 0;
 	line-height: 1;
+}
+
+.woocommerce-cart-form .product-remove a.remove::before {
+	content: "";
+	width: 20px;
+	height: 20px;
+	background-color: var(--blanco);
+	-webkit-mask-image: url("https://seda.melopido.shop/wp-content/uploads/2026/09/trash.svg");
+	mask-image: url("https://seda.melopido.shop/wp-content/uploads/2026/09/trash.svg");
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+}
+
+.woocommerce-cart-form .product-remove a.remove::after {
+	content: "Eliminar";
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	transform: translateX(-50%);
+	margin-top: 4px;
+	font-size: 10px;
+	font-weight: 400;
+	color: var(--texto-secundario);
+	white-space: nowrap;
 }
 
 /* === avisos-woocommerce.css ===
@@ -311,9 +404,27 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
    en el posicionamiento horizontal, así que ya no debería disparar ese
    caso concreto. No se ha podido reproducir en local -sin acceso a un
    iPhone real ni a un simulador con Xcode completo en esta máquina-,
-   así que queda pendiente de confirmar que se ha resuelto de verdad. */
-.woocommerce-message,
-.woocommerce-info {
+   así que queda pendiente de confirmar que se ha resuelto de verdad.
+
+   [2026-09-15] CORRECCIÓN: el selector era ".woocommerce-message,
+   .woocommerce-info" sin más -cualquier elemento con esa clase en toda
+   la página-, pero avisos-toast.js (el script que añade la clase
+   "melopido-toast-visible" para hacerlo visible) SOLO actúa dentro de
+   ".woocommerce-notices-wrapper" -avisos reales de carrito/cupón-, a
+   propósito. WooCommerce reutiliza la misma clase ".woocommerce-info"
+   para contenido estático que no tiene nada que ver con un aviso
+   pasajero (encontrado en "Mi cuenta > Pedidos": el aviso de "confirma
+   tu email" y el de "no se ha hecho ningún pedido todavía" son
+   ".woocommerce-info" normales, fuera de ese wrapper). Como nunca
+   reciben la clase "melopido-toast-visible", se quedaban con
+   "opacity:0" para siempre -invisibles, aunque el HTML estuviera ahí-.
+   Se añade ".woocommerce-notices-wrapper" delante de ambos selectores
+   para que el estilo "toast" (fixed + oculto por defecto) solo alcance
+   a los avisos que de verdad va a activar el script; el aspecto base
+   (fondo blanco, negrita, sombra) de más abajo sigue aplicando a
+   cualquier aviso, estén donde estén. */
+.woocommerce-notices-wrapper .woocommerce-message,
+.woocommerce-notices-wrapper .woocommerce-info {
 	position: fixed;
 	top: 24px;
 	left: 0;
@@ -333,11 +444,37 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
 	pointer-events: none;
 }
 
-.woocommerce-message.melopido-toast-visible,
-.woocommerce-info.melopido-toast-visible {
+.woocommerce-notices-wrapper .woocommerce-message.melopido-toast-visible,
+.woocommerce-notices-wrapper .woocommerce-info.melopido-toast-visible {
 	opacity: 1;
 	transform: translateY(0);
 	pointer-events: auto;
+}
+
+/* === avisos-woocommerce-boton-movil.css ===
+   [2026-09-15] Cuando un aviso lleva un botón dentro (ej. "Confirma tu
+   dirección de correo electrónico" + botón "Confirmar dirección de
+   correo electrónico", en Mi cuenta > Pedidos -sin pedidos todavía-),
+   van en fila (texto a la izquierda, botón a la derecha -estilo base
+   de Bricks para estos avisos, sin control nativo para cambiarlo por
+   elemento porque el marcado no es un elemento de Bricks-). En un
+   móvil estrecho el botón se queda sin sitio y el texto de dentro se
+   parte en varias líneas. En vertical, texto arriba y botón debajo, a
+   todo el ancho -mismo patrón que el resto de botones del sitio en
+   móvil-. */
+@media (max-width: 767px) {
+	.woocommerce-message,
+	.woocommerce-info {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 12px;
+	}
+
+	.woocommerce-message .button,
+	.woocommerce-info .button {
+		width: 100%;
+		text-align: center;
+	}
 }
 
 /* === titulos-pedido-movil.css ===
@@ -450,4 +587,137 @@ body:not(.woocommerce-checkout) [class*="woocommerce"] * + p:not(.brxe-woocommer
 #order_review #payment.woocommerce-checkout-payment {
 	border-top: none;
 	border-radius: 0 0 8px 8px;
+}
+
+/* === enlaces-texto-libre.css ===
+   [2026-09-15] Enlaces dentro de texto libre (elementos "Texto"/"Texto
+   básico" de Bricks -sin control nativo de "color de enlace" separado
+   del texto normal-): salían exactamente del mismo color que el texto
+   de alrededor, sin subrayado, así que no se percibían como enlaces
+   (encontrado en "Mi cuenta > Panel": "Cerrar sesión", "pedidos
+   recientes"... todos igual que el párrafo). Es un elemento de Bricks
+   que se reutiliza en cualquier plantilla, así que la regla cubre toda
+   la web, no solo esa página. Los enlaces de menús/botones no se tocan
+   aquí -ya llevan su propio color explícito desde sus propios ajustes
+   de Bricks, con más especificidad que esta regla-. */
+.brxe-text a,
+.brxe-text-basic a {
+	color: var(--terracota);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+}
+
+.brxe-text a:hover,
+.brxe-text-basic a:hover {
+	color: var(--rosa-empolvado);
+}
+
+/* === navegacion-mi-cuenta.css ===
+   [2026-09-15] Menú lateral de "Mi cuenta" (Escritorio/Pedidos/
+   Direcciones/Métodos de pago/Detalles de la cuenta/Salir): WooCommerce
+   lo imprime directo (wc_account_navigation(), plantilla
+   myaccount/navigation.php) sin ningún elemento de Bricks de por medio
+   -no hay control nativo para esto en el "Woo Account Builder" de
+   Bricks-, así que salía como lista de enlaces en bruto, sin jerarquía
+   visual ni el enlace activo marcado. Mismo aspecto de "tarjeta" que el
+   resto del sitio (fondo blanco, sombra, radio) y resaltado del enlace
+   activo con el rosa empolvado de marca -WooCommerce ya marca ese <li>
+   con la clase "is-active", solo había que darle estilo-. Es el mismo
+   <nav> en todas las páginas de "Mi cuenta", así que se corrige de una
+   vez para todas.
+
+   "line-height: 1.3" explícito porque estos enlaces heredaban un
+   line-height de 60px de algún estilo genérico de botón/enlace del
+   sitio (no un margen, comprobado en vivo) -con texto de 15px eso deja
+   cada fila con ~85px de alto real, mucho más aire del que parece a
+   simple vista en el editor-. */
+.woocommerce-MyAccount-navigation {
+	background-color: var(--blanco);
+	border-radius: 16px;
+	box-shadow: 0 8px 24px rgba(31, 31, 31, 0.1);
+	padding: 8px;
+	margin-bottom: 24px;
+}
+
+.woocommerce-MyAccount-navigation ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.woocommerce-MyAccount-navigation-link a {
+	display: block;
+	padding: 12px 16px;
+	border-radius: 8px;
+	color: var(--negro-casi-puro);
+	font-weight: 500;
+	line-height: 1.3;
+	text-decoration: none;
+}
+
+.woocommerce-MyAccount-navigation-link a:hover {
+	background-color: var(--beige-secundario);
+}
+
+.woocommerce-MyAccount-navigation-link.is-active a {
+	background-color: var(--rosa-empolvado);
+	color: var(--blanco);
+}
+
+.woocommerce-MyAccount-navigation-link--customer-logout a {
+	color: var(--texto-secundario);
+}
+
+/* === margen-lateral-mi-cuenta-movil.css ===
+   [2026-09-15] Todo "Mi cuenta" (menú lateral + contenido de cada
+   subpágina) vive dentro de ".brxe-woocommerce-account-page" -el
+   envoltorio que Bricks genera automáticamente alrededor de la página
+   de cuenta de WooCommerce, sin ajustes propios en el builder-, así que
+   no hereda el margen lateral que sí tienen el resto de páginas (la
+   "Sección > Contenedor" estándar de Bricks, que sí trae ese relleno).
+   El resultado: en móvil, tanto el menú como el texto de bienvenida
+   quedaban pegados a los bordes de la pantalla (detectado por el
+   usuario en un iPhone real). 16px a cada lado, el mismo valor que usa
+   el contenedor estándar del resto del sitio en este ancho.
+
+   [2026-09-15] Se probó un fondo distinto (beige) para que las
+   tarjetas blancas resaltaran por contraste en vez de solo por sombra
+   -pensando que el problema en Safari era de percepción visual-, pero
+   el usuario confirmó que el fallo es estructural (la tarjeta de
+   "Pedidos" se sale del margen de verdad, no es solo un tema de
+   contraste) y pidió dejar el fondo como estaba antes. Revertido.
+
+   [2026-09-16] El menú de "Mi cuenta" también quedaba pegado arriba,
+   justo debajo de la cabecera, sin ningún respiro -mismo motivo: este
+   envoltorio no hereda el padding vertical de la "Sección > Contenedor"
+   estándar de Bricks-. 24px de margen superior. */
+
+@media (max-width: 767px) {
+	.brxe-woocommerce-account-page {
+		padding-left: 16px;
+		padding-right: 16px;
+		padding-top: 24px;
+	}
+}
+
+/* === boton-metodos-pago-movil.css ===
+   [2026-09-16] "Mi cuenta > Métodos de pago" no tiene plantilla propia
+   de Bricks -no existe ningún elemento "Cuenta - Métodos de pago" en el
+   Woo Account Builder, así que WooCommerce imprime el contenido tal
+   cual, sin ningún elemento de Bricks de por medio (comprobado: el
+   enlace "Añadir método de pago" no lleva ninguna clase "brxe-")-. Sin
+   elemento de Bricks no hay ajuste nativo posible. Se selecciona el
+   enlace directo dentro de ".woocommerce-MyAccount-content" para no
+   afectar a otros botones de la web -en el resto de páginas de cuenta
+   los botones van anidados dentro de un elemento de Bricks, nunca como
+   hijo directo de ese contenedor-. */
+@media (max-width: 767px) {
+	.woocommerce-MyAccount-content > a.button {
+		display: block;
+		width: 100%;
+		text-align: center;
+		box-sizing: border-box;
+		margin-bottom: 32px;
+	}
 }

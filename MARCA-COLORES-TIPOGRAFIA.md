@@ -2,7 +2,7 @@
 
 Referencia de la identidad visual, extraída del CSS real de la web pública **melopido.shop** (la tienda ya publicada, fuente de verdad del diseño) y aplicada como estándar en **seda.melopido.shop** (Bricks).
 
-Última actualización: 2026-09-17.
+Última actualización: 2026-09-23.
 
 ## Tipografía
 
@@ -28,12 +28,13 @@ Paleta de marca nativa de Bricks: **"Melopido"** (id `4f1861`), creada vía `bri
 
 | Nombre | Variable | Hex | Uso |
 |---|---|---|---|
-| Crema principal | `--crema-principal` | `#F8F3EE` | Fondo general del sitio (Page Settings → Fondo del sitio, puesto en la plantilla header id 206 para que aplique a toda la web) |
+| Crema principal | `--crema-principal` | `#F8F3EE` | Sin uso actual confirmado — la doc decía que era el fondo del sitio pero al comprobarlo en vivo (2026-09-21) el ajuste real era `--blanco`, no este |
 | Beige secundario | `--beige-secundario` | `#F4EFE8` | Fondos de tarjetas/secciones alternas |
 | Blanco | `--blanco` | `#FFFFFF` | Fondos de bloques, tarjetas destacadas |
 | Blanco hueso | `--blanco-hueso` | `#FDFCFA` | Fondo de variaciones de producto, botón inactivo del quiz de color |
 | Beige borde | `--beige-borde` | `#D8D2CB` | Bordes de campos (ej. selector de cantidad) |
 | Beige borde apagado | `--beige-borde-apagado` | `#DDD8D2` | Borde del item "medida actual" deshabilitado en la fila "Otras medidas" (producto) |
+| Blanco background | `--blanco-background` | `#F5F5F7` | **Fondo del sitio actual** (Page Settings → Fondo del sitio, plantilla header id 206) — creado y aplicado el 2026-09-21, sustituyendo a `--blanco` |
 
 ### Texto
 
@@ -54,7 +55,9 @@ Paleta de marca nativa de Bricks: **"Melopido"** (id `4f1861`), creada vía `bri
 | Terracota (variante/hover) | `--terracota` | `#AC6764` | Estado hover o variante del rosa |
 | Naranja Amazon | `--naranja-amazon` | `#F39200` | Botón "Comprar en Amazon" — diferenciado del CTA propio |
 
-15 colores en total. Los 3 marcados arriba (blanco hueso, gris medio, beige borde) se añadieron el 2026-08-13 al detectar hex sueltos en clases globales existentes (`brxw-woo-add-to-cart`, `toggle-boton-activo/inactivo`, `brxw-woo-account-edit-address-01`) que no tenían variable asignada. Beige borde apagado y texto apagado se añadieron el 2026-09-17 en una auditoría de hex sueltos en los CSS del tema hijo (`quiz-color.css`, `selector-color-carrito.css`, `medida-selector.css`) — la mayoría coincidían exactamente con colores ya existentes y se sustituyeron por su `var()`, pero estos dos no coincidían con ningún color de la paleta.
+16 colores en total. Los 3 marcados arriba (blanco hueso, gris medio, beige borde) se añadieron el 2026-08-13 al detectar hex sueltos en clases globales existentes (`brxw-woo-add-to-cart`, `toggle-boton-activo/inactivo`, `brxw-woo-account-edit-address-01`) que no tenían variable asignada. Beige borde apagado y texto apagado se añadieron el 2026-09-17 en una auditoría de hex sueltos en los CSS del tema hijo (`quiz-color.css`, `selector-color-carrito.css`, `medida-selector.css`) — la mayoría coincidían exactamente con colores ya existentes y se sustituyeron por su `var()`, pero estos dos no coincidían con ningún color de la paleta. Blanco background se creó el 2026-09-21 y se aplicó ese mismo día como fondo del sitio, sustituyendo a `--blanco`.
+
+Nota: la paleta real de Bricks tiene más colores que estos 16 (25+ en total) — el resto son tonalidades/transparencias generadas automáticamente (`-t-1`, `-t-2`...) y colores de las variaciones de producto (swatches de color por variante), que no forman parte de la identidad de marca documentada aquí. Una excepción puntual: `--negro-casi-puro-t-4` (transparencia manual al 4%, id `e101ab`) se creó el 2026-09-22 para sustituir un hex suelto (`#1F1F1F0A`) detectado en la "Píldora Color" de la barra fija móvil de producto — no encajaba en las tonalidades automáticas existentes (25%/50%/75%).
 
 ## Cómo cambiar esto desde el propio editor de Bricks
 

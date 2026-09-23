@@ -66,9 +66,26 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		}
 	}
 
+	// [2026-09-23] Prueba reversible: el disparador "¿No sabes qué color
+	// elegir?" (bloque Bricks fuera de esta fila, ver plantilla producto id
+	// 521) se traslada junto a los propios círculos de color (mismo
+	// contenedor flex que los pinta el plugin), como un círculo más al
+	// final de la fila. Mover el nodo conserva sus listeners (quiz-color.js
+	// los engancha una vez al cargar la página, no depende de dónde esté
+	// en el DOM después).
+	function relocateQuizTrigger() {
+		var swatchesRow = form.querySelector( '.vi-wpvs-variation-wrap-vi_wpvs_color_design' );
+		var trigger = document.querySelector( '.quiz-trigger-junto-colores' );
+		if ( ! swatchesRow || ! trigger || trigger.parentElement === swatchesRow ) {
+			return;
+		}
+		swatchesRow.appendChild( trigger );
+	}
+
 	function handleMutation() {
 		relocate();
 		updateColorLabel();
+		relocateQuizTrigger();
 	}
 
 	handleMutation();

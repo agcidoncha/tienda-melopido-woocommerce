@@ -16,29 +16,35 @@
 	transition: box-shadow 0.2s ease;
 }
 
-/* Tamaño de los círculos de color fluido (992px→1920px), igual que el
-   resto de la ficha de producto (ver MAQUETACION-FLUIDA.md). El plugin
-   (WPVS) fija su propio tamaño en vi-wpvs-variation-button-select/
-   vi-wpvs-option-wrap con la misma especificidad que aquí, por eso hace
-   falta !important para ganar de forma fiable. Además el wrap es un
-   flex-item con flex-shrink:1 por defecto del plugin: sin flex-shrink:0
-   el contenedor lo encoge por debajo del width fijado en cuanto no cabe
-   todo en una fila, ignorando silenciosamente el clamp. */
+/* Tamaño de los círculos de color fluido (992px→1440px, el límite real
+   del contenedor desde el 2026-09-22 — ver MARCA-COLORES-TIPOGRAFIA.md),
+   igual que el resto de la ficha de producto. Techo bajado de 50px a
+   42px (se veían demasiado grandes en desktop); el mínimo se mantiene en
+   36px porque coincide con el tamaño fijo de .vi-wpvs-option-color (el
+   círculo de color interior) — bajar también el mínimo dejaría un hueco
+   entre el wrap y el círculo. El plugin (WPVS) fija su propio tamaño en
+   vi-wpvs-variation-button-select/vi-wpvs-option-wrap con la misma
+   especificidad que aquí, por eso hace falta !important para ganar de
+   forma fiable. Además el wrap es un flex-item con flex-shrink:1 por
+   defecto del plugin: sin flex-shrink:0 el contenedor lo encoge por
+   debajo del width fijado en cuanto no cabe todo en una fila, ignorando
+   silenciosamente el clamp. */
 .vi-wpvs-variation-wrap.vi-wpvs-variation-wrap-vi_wpvs_color_design .vi-wpvs-variation-button-select,
 .vi-wpvs-variation-wrap.vi-wpvs-variation-wrap-vi_wpvs_color_design .vi-wpvs-option-wrap {
-	width: clamp(36px, calc(36px + 14 * (100vw - 992px) / 928), 50px) !important;
-	height: clamp(36px, calc(36px + 14 * (100vw - 992px) / 928), 50px) !important;
+	width: clamp(36px, calc(36px + 6 * (100vw - 992px) / 448), 42px) !important;
+	height: clamp(36px, calc(36px + 6 * (100vw - 992px) / 448), 42px) !important;
 	flex-shrink: 0 !important;
+	padding: 0 !important;
 	/* 50% en vez de un valor fijo en px: así el círculo es perfecto a
 	   cualquier tamaño del rango fluido, sin depender de que el radio
 	   siga el crecimiento del width/height a mano. */
 	border-radius: 50% !important;
 }
 
-/* Etiqueta "Color:" fluida (992px→1920px), 18px es el máximo a ancho
-   completo (ver MAQUETACION-FLUIDA.md). */
+/* Etiqueta "Color:" fluida (992px→1440px, ver nota arriba sobre el
+   límite real del contenedor). */
 .brxw-woo-add-to-cart.brxe-product-add-to-cart table.variations label {
-	font-size: clamp(14px, calc(14px + 4 * (100vw - 992px) / 928), 18px) !important;
+	font-size: clamp(14px, calc(14px + 4 * (100vw - 992px) / 448), 18px) !important;
 }
 
 .vi-wpvs-option-wrap-selected .vi-wpvs-option-color {
@@ -64,6 +70,24 @@
 
 .variations th.label label {
 	display: inline !important;
+}
+
+/* [2026-09-23] Prueba reversible: el disparador "¿No sabes qué color
+   elegir?" (bloque Bricks reubicado aquí por JS, ver
+   selector-color-carrito.js) se cuela como un elemento más dentro de la
+   fila flex de círculos de color (.vi-wpvs-variation-wrap-...), al final
+   de la fila. flex-wrap ya lo trae el plugin en ese contenedor, así que
+   si no cabe en la primera línea de círculos simplemente baja de línea
+   igual que haría un octavo círculo. */
+.quiz-trigger-junto-colores {
+	/* Bricks pone width:100% por defecto a los bloques; al colarse como un
+	   hijo más de la fila flex de círculos (ver JS) eso lo estira a todo
+	   el ancho de la fila, en vez de quedar del tamaño de su contenido
+	   junto al último círculo. */
+	width: auto !important;
+	flex: 0 0 auto !important;
+	flex-shrink: 0;
+	margin-left: 10px;
 }
 
 /* Separador ":" que el plugin inyecta junto a la etiqueta al seleccionar
